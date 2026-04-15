@@ -13,6 +13,10 @@ SKILLS=(
   "caption-writer"
   "social-creative-designer"
   "social-performance-review"
+  "linkedin-writer"
+  "threads-writer"
+  "x-writer"
+  "publisher"
 )
 
 for skill in "${SKILLS[@]}"; do
@@ -24,5 +28,5 @@ for skill in "${SKILLS[@]}"; do
 done
 
 echo ""
-echo "Done. All 6 skills installed to $SKILLS_DIR"
+echo "Done. All 10 skills installed to $SKILLS_DIR"
 echo "Open Claude Code and run /social-media-manager to get started."

@@ -1,7 +1,7 @@
 ---
 name: social-media-manager
-version: 1.0.0
-description: Social Media Manager role skill. Orchestrates the full SMB social media workflow — brand setup, monthly content calendar, caption writing, visual creation, and end-of-month performance review. Coordinates /brand-onboarding, /content-calendar, /caption-writer, /social-creative-designer, and /social-performance-review as a sequential, human-reviewed pipeline. Run this skill instead of invoking component skills individually.
+version: 2.0.0
+description: Social Media Manager role skill. Orchestrates the full SMB social media workflow across three layers — Foundation (brand setup + calendar), Content Creation (captions, platform-specialist posts, visuals), and Distribution (scheduling via Blotato + performance review). Coordinates all 9 component skills as a sequential, human-reviewed pipeline. Run this skill instead of invoking component skills individually.
 ---
 
 # Social Media Manager
@@ -15,24 +15,26 @@ You do not replace the component skills — you direct them. When a phase requir
 ## The Workflow
 
 ```
-NEW CLIENT
-    ↓
-/brand-onboarding  →  context/brand-style.md
-    ↓
-MONTHLY CYCLE (repeat each month)
-    ↓
-/content-calendar  →  context/content-calendar.md
-    ↓
-/caption-writer    →  outputs/captions/[client]-captions-[month]-[year].md
-    ↓
-/social-creative-designer  →  outputs/creatives/[post visuals]
-    ↓
-[Posts go live — client publishes content]
-    ↓
-/social-performance-review  →  outputs/reviews/[client]-review-[month]-[year].md
-    ↓
-(feeds back into next /content-calendar)
+LAYER 1 — FOUNDATION
+  /brand-onboarding  →  context/brand-style.md    (run once per client)
+  /content-calendar  →  context/content-calendar.md  (run monthly)
+
+LAYER 2 — CONTENT CREATION  (run monthly, after calendar)
+  /caption-writer           →  outputs/captions/    (Instagram, Facebook, multi-platform)
+  /social-creative-designer →  outputs/creatives/   (branded visuals via Nano Banana)
+  /linkedin-writer          →  outputs/linkedin/    (LinkedIn-native posts)
+  /threads-writer           →  outputs/threads/     (Threads posts)
+  /x-writer                 →  outputs/x/           (X/Twitter posts)
+
+LAYER 3 — DISTRIBUTION & REVIEW
+  /publisher                →  Blotato (scheduling + infographic visuals)  [optional]
+  /social-performance-review →  outputs/reviews/   (run end of month)
+                                      ↓
+                            context/best-performers.md
+                            (feeds back into next month's content)
 ```
+
+**Create → Specialise → Publish.** Layer 1 builds the foundation. Layer 2 creates platform-native content. Layer 3 distributes it and measures results.
 
 ---
 
@@ -138,6 +140,25 @@ Run the relevant component skill directly for the specific task. No need to run 
 
 ---
 
+### Route F — Platform-Specific Content
+**Trigger:** Operator asks for LinkedIn, Threads, or X content specifically — or client is active on one of these platforms and wants native content rather than adapted captions.
+
+> "Which platform(s) do you want content for? LinkedIn, Threads, X, or multiple?"
+
+Steps:
+1. Confirm which platform(s) — LinkedIn, Threads, X, or a combination
+2. Confirm `context/content-calendar.md` exists and is current — or offer to build the calendar first before writing platform-specific posts
+3. Run the relevant specialist skill(s) in sequence:
+   - `/linkedin-writer` → `outputs/linkedin/`
+   - `/threads-writer` → `outputs/threads/`
+   - `/x-writer` → `outputs/x/`
+4. Pause after each skill completes — present the output summary. Ask: "Any posts you want adjusted before we move to publishing?"
+5. On approval, ask: "Do you want to schedule these via Blotato, or handle publishing manually?"
+6. If **Blotato**: run `/publisher` — it handles the setup check, infographic generation, and scheduling
+7. If **manually**: produce the Monthly Handoff Summary (Phase 5) with publishing notes
+
+---
+
 ## Phase 2 — Component Skill Execution
 
 When invoking a component skill, follow this pattern:
@@ -150,6 +171,10 @@ When invoking a component skill, follow this pattern:
    - `/content-calendar` → `~/.claude/skills/content-calendar/SKILL.md`
    - `/caption-writer` → `~/.claude/skills/caption-writer/SKILL.md`
    - `/social-creative-designer` → `~/.claude/skills/social-creative-designer/SKILL.md`
+   - `/linkedin-writer` → `~/.claude/skills/linkedin-writer/SKILL.md`
+   - `/threads-writer` → `~/.claude/skills/threads-writer/SKILL.md`
+   - `/x-writer` → `~/.claude/skills/x-writer/SKILL.md`
+   - `/publisher` → `~/.claude/skills/publisher/SKILL.md`
    - `/social-performance-review` → `~/.claude/skills/social-performance-review/SKILL.md`
 
 3. **On completion**, return to this orchestration layer:
@@ -167,9 +192,13 @@ At each handoff, verify the output file from the completed skill before proceedi
 | Completed skill | Output to verify | Input it feeds |
 |---|---|---|
 | `/brand-onboarding` | `context/brand-style.md` exists and contains content pillars | `/content-calendar` |
-| `/content-calendar` | `context/content-calendar.md` exists with full post entries | `/caption-writer` |
+| `/content-calendar` | `context/content-calendar.md` exists with full post entries | `/caption-writer`, platform specialists |
 | `/caption-writer` | `outputs/captions/` file exists with all posts and Visual Direction fields | `/social-creative-designer` |
 | `/social-creative-designer` | `outputs/creatives/` contains the expected image files | Monthly handoff |
+| `/linkedin-writer` | `outputs/linkedin/` file exists with all posts and BLOTATO FLAG fields | `/publisher` |
+| `/threads-writer` | `outputs/threads/` file exists with all posts and BLOTATO FLAG fields | `/publisher` |
+| `/x-writer` | `outputs/x/` file exists with all posts and BLOTATO FLAG fields | `/publisher` |
+| `/publisher` | Scheduling confirmed in Blotato, summary shown | `context/workflow-status.md` publishing fields |
 | `/social-performance-review` | `outputs/reviews/` file exists, `context/best-performers.md` updated | Next `/content-calendar` |
 
 If an output file is missing or incomplete, resolve it before moving to the next skill — do not silently proceed with a broken handoff.
@@ -200,20 +229,31 @@ MONTHLY CONTENT SUMMARY — [Client Name] — [Month Year]
 
 CONTENT PRODUCED
   Posts planned:      [n]
-  Captions written:   [n]
+  Captions written:   [n] (outputs/captions/)
+  LinkedIn posts:     [n] (outputs/linkedin/) / not written
+  Threads posts:      [n] (outputs/threads/) / not written
+  X posts:            [n] (outputs/x/) / not written
   Visuals created:    [n]
   Visuals to source:  [n] (client photos needed)
+
+PUBLISHING STATUS
+  Scheduled via Blotato:  [n posts] / not yet scheduled
+  Scheduled platforms:    [list] / —
+  Infographics generated: [n] / —
 
 FILES
   Calendar:    context/content-calendar.md
   Captions:    outputs/captions/[filename]
+  LinkedIn:    outputs/linkedin/[filename]  (if written)
+  Threads:     outputs/threads/[filename]   (if written)
+  X:           outputs/x/[filename]         (if written)
   Visuals:     outputs/creatives/ ([n] files)
 
 NEXT ACTIONS FOR CLIENT
-  □ Review and approve all captions (see caption file)
-  □ Schedule posts using [Later / Buffer / native platform]
+  □ Review and approve all captions and platform posts
+  □ [If not scheduled] Publish posts via Blotato, Later, Buffer, or native platform
   □ Source photos for [n] posts that need client images
-  □ At end of month: share Instagram/LinkedIn analytics for performance review
+  □ At end of month: share analytics for performance review
 
 NEXT ACTIONS FOR OPERATOR
   □ End-of-month: run /social-performance-review
@@ -237,14 +277,19 @@ Last updated: [date]
 ## [Month Year]
 - [x] Content calendar built — [date] — [n] posts
 - [x] Captions written — [date]
+- [ ] LinkedIn posts — [n] written / not started
+- [ ] Threads posts — [n] written / not started
+- [ ] X posts — [n] written / not started
 - [ ] Visuals — [n of n] complete
-- [ ] Posts scheduled
+- [ ] Published via Blotato — [n posts scheduled / not started]
 - [ ] Performance review
 
 ## Previous Months
 - [Month]: Review complete — Score [x/10]
 - [Month]: Review complete — Score [x/10]
 ```
+
+If an existing `workflow-status.md` file does not have the LinkedIn, Threads, X, or publishing fields, add them and set their status to "not started". Do not overwrite existing entries.
 
 This file is the first thing read in Phase 0 — it makes resuming mid-workflow reliable.
 
@@ -257,6 +302,8 @@ This file is the first thing read in Phase 0 — it makes resuming mid-workflow 
 - **The review feeds the next month** — the performance review is not just a report; it changes the pillar ratios and format mix for the next calendar. Don't skip it, and always run it before building the next month's calendar if review data is available.
 - **Mid-workflow recovery** — if a session ends mid-workflow, `context/workflow-status.md` tells you exactly where to resume. Never restart from scratch.
 - **Route E (specific tasks) is the most common daily use** — most sessions won't be full-pipeline runs. The operator will ask for one caption, one image, or a calendar tweak. Use the right component skill directly.
+- **Use Route F for LinkedIn, Threads, and X content — not Route B.** `/caption-writer` is designed for Instagram and Facebook. The platform specialists (`/linkedin-writer`, `/threads-writer`, `/x-writer`) write from first principles for each platform and produce significantly better output. Don't use caption-writer for LinkedIn or X content.
+- **/publisher requires Blotato.** If the client handles their own scheduling via Later, Buffer, or the native platform, skip `/publisher` entirely and use the Monthly Handoff Summary to hand over the output files. `/publisher` is an optional layer — the rest of the workflow runs without it.
 
 ---
 
@@ -264,11 +311,21 @@ This file is the first thing read in Phase 0 — it makes resuming mid-workflow 
 
 ```
 /social-media-manager  (this skill — orchestrator)
-    ├── /brand-onboarding       (run once per client)
-    ├── /content-calendar       (run monthly)
-    ├── /caption-writer         (run monthly, after calendar)
-    ├── /social-creative-designer  (run per-post, after captions)
-    └── /social-performance-review (run end of month)
+    │
+    ├── LAYER 1 — FOUNDATION
+    │   ├── /brand-onboarding          (run once per client)
+    │   └── /content-calendar          (run monthly)
+    │
+    ├── LAYER 2 — CONTENT CREATION
+    │   ├── /caption-writer            (Instagram, Facebook, multi-platform)
+    │   ├── /social-creative-designer  (branded visuals — Nano Banana)
+    │   ├── /linkedin-writer           (LinkedIn-native posts)
+    │   ├── /threads-writer            (Threads posts)
+    │   └── /x-writer                  (X/Twitter posts)
+    │
+    └── LAYER 3 — DISTRIBUTION & REVIEW
+        ├── /publisher                 (Blotato scheduling + infographics)
+        └── /social-performance-review (run end of month)
 
 Supporting context (read by all skills):
     ├── context/brand-style.md
