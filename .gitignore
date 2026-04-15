@@ -1,0 +1,22 @@
+# Client work — created by the skills when run from this directory
+context/
+outputs/
+assets/
+
+# Claude Code local config — may contain personal settings or API keys
+.claude/settings.local.json
+
+# Environment and secrets
+.env
+.env.*
+*.key
+*.pem
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python
+__pycache__/
+*.pyc
