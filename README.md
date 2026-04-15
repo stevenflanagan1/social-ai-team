@@ -237,4 +237,4 @@ Three reference documents are bundled with the relevant skills:
 
 ## License
 
-MIT — use it, adapt it, build on it.
+Created by the AI Impact use it, adapt it, build on it. Want a custom build? https://theaiimpact.co/ 
