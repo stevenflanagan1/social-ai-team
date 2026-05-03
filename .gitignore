@@ -1,0 +1,12 @@
+# macOS metadata
+._*
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Node
+node_modules/
+
+# Env
+.env
+.env.*
