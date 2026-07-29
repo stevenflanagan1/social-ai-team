@@ -151,36 +151,66 @@ If the request fails, report the structured error and stop.
 Use the REST API because X writes require an `Idempotency-Key`.
 Do not pass authentication or idempotency values through MCP code.
 
-For each approved post:
+For a standard post, use `POST [n]` as its source identifier.
+For a thread, use `THREAD [n] ITEM [i]/[total]` for each item.
+Treat `THREAD [n]` as the parent identifier.
+
+Before publishing:
 
 1. Confirm `XQUIK_API_KEY` exists without printing its value.
-2. Build the exact approved JSON payload.
-3. Calculate its SHA-256 fingerprint using canonical JSON.
+2. Calculate a content fingerprint for every approved item.
+   Include its NFC text and approved media.
+3. Use canonical JSON for every fingerprint.
    Sort object keys recursively. Preserve array order.
    Encode UTF-8 without extra whitespace.
 4. Read `context/workflow-status.md` for confirmed publications and in-flight mappings.
-5. Match records by the exact source file and `POST [n]` or `THREAD [n]`.
-6. If a confirmed publication exists, show its tweet ID and stop.
-7. Require a separate explicit republish approval before creating another key.
-8. Preserve the original record and identify the new attempt as `REPUBLISH [n]`.
-9. Reuse an in-flight idempotency value only when the source and fingerprint match.
-10. Stop when an in-flight mapping has a different fingerprint.
+5. Match records by the exact source file and source identifier.
+   For a thread, collect every record under its parent identifier.
+   Stop when a stored item count differs from the approved thread.
+6. For a standard post, stop when a confirmed publication exists.
+   Show its tweet ID.
+7. For a thread, stop when its parent has a `complete` record.
+   Show every confirmed tweet ID.
+8. If a thread has item records but no `complete` record:
+   - Require a contiguous confirmed prefix starting at item 1.
+   - Require every stored content fingerprint to match the approved item.
+   - Require a tweet ID for each confirmed item.
+   - If every item is confirmed, mark the parent `complete` and stop.
+   - Resume at the first unconfirmed item.
+   - Use the last confirmed tweet ID as its reply target.
+   - Show completed items and the exact remaining items.
+   - Require explicit approval to resume the remaining thread.
+9. Stop when thread records have gaps, mismatched fingerprints, or missing tweet IDs.
+   Also stop when legacy records lack item identifiers or content fingerprints.
+   Ask the operator to reconcile the records before continuing.
+10. Require a separate explicit republish approval before publishing completed content again.
+11. Preserve the original record and identify the new attempt as `REPUBLISH [n]`.
+12. Before each unconfirmed item, build its exact approved JSON payload.
+    Include the confirmed previous tweet ID for a thread reply.
+13. Calculate the payload fingerprint using the same canonical JSON rules.
+14. If a matching `accepted` mapping has a validated status URL, poll it.
+    Never send its POST again.
+15. For matching `prepared` or `sent` mappings, verify the account.
+    Then reuse the exact payload and idempotency value.
+16. Stop when an in-flight mapping has a different payload fingerprint.
    Resolve its existing write before replacing it.
-11. Otherwise, generate one cryptographically random UUID.
-12. Before the request, persist and reread this mapping:
-   - source file and `POST [n]` or `THREAD [n]`
+17. Otherwise, generate one cryptographically random UUID per item.
+18. Before each request, persist and reread this mapping:
+   - source file and exact post or thread-item identifier
+   - thread parent identifier when applicable
    - `REPUBLISH [n]` when separately approved
    - idempotency value
+   - content fingerprint
    - payload fingerprint
    - state: `prepared`
-13. Call `POST https://xquik.com/api/v1/x/tweets`.
-14. Block redirects.
-15. Send these application headers:
+19. Call `POST https://xquik.com/api/v1/x/tweets`.
+20. Block redirects.
+21. Send these application headers:
    - `x-api-key: $XQUIK_API_KEY`
    - `Content-Type: application/json`
    - `Idempotency-Key: [stored value]`
-16. Send the exact fingerprinted payload.
-17. Mark the mapping `sent` after dispatch.
+22. Send the exact fingerprinted payload.
+23. Mark the mapping `sent` after dispatch.
 
 Never send the API key to another host.
 Never reuse an idempotency value for changed content or another action.
@@ -217,6 +247,9 @@ Publish thread items sequentially.
 Wait for each item to succeed before publishing its reply.
 Use the confirmed tweet ID as the next `reply_to_tweet_id`.
 Use a new idempotency value for each thread item.
+Record each item immediately with its index, fingerprint, and tweet ID.
+Mark the thread parent `complete` only after every item succeeds.
+Resume an incomplete thread from its first unconfirmed item.
 Stop and report partial progress if any item fails.
 
 ---
@@ -233,14 +266,17 @@ Account: @[account] / not applicable
 Items complete: [n of n]
 Draft IDs: [IDs or none]
 Tweet IDs: [IDs or none]
-Publication records: [outputs/x/file#POST n or THREAD n → tweet IDs, or none]
-Pending action: [outputs/x/file#POST n or THREAD n → action ID → validated status URL, or none]
+Publication records: [source identifier → content fingerprint → tweet ID, or none]
+Thread status: [outputs/x/file#THREAD n → partial/complete → tweet IDs, or none]
+Pending action: [source identifier → action ID → validated status URL, or none]
 In-flight write: [source identifier → stored idempotency mapping → state, or none]
 Status: complete / failed / awaiting confirmation
 ```
 
 Update only the relevant Xquik fields in `context/workflow-status.md`.
-Store each confirmed tweet ID against its exact source file and post or thread identifier.
+Store each confirmed tweet ID and fingerprint against its exact source identifier.
+Store every thread item separately under its thread parent.
+Mark a thread complete only after every item has a confirmed tweet ID.
 Keep pending writes mapped to the same source identifier until they become terminal.
 Keep every in-flight mapping until its terminal result is recorded.
 Do not overwrite unrelated workflow history.

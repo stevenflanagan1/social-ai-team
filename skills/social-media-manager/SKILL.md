@@ -249,8 +249,9 @@ XQUIK STATUS
   Drafts saved:            [n] / not used
   Posts published:         [n with confirmed tweet IDs] / not used
   Confirmed tweet IDs:     [IDs] / none
-  Publication records:     [outputs/x/file#POST n or THREAD n → tweet IDs] / none
-  Pending writes:          [outputs/x/file#POST n or THREAD n → action ID → validated status URL] / none
+  Publication records:     [source identifier → content fingerprint → tweet ID] / none
+  Thread status:           [outputs/x/file#THREAD n → partial/complete → tweet IDs] / none
+  Pending writes:          [source identifier → action ID → validated status URL] / none
   In-flight writes:        [source identifier → stored idempotency mapping → state] / none
 
 PUBLISHING STATUS
@@ -304,8 +305,9 @@ Last updated: [date]
 - [ ] Xquik research: [n posts researched / not used]
 - [ ] Xquik drafts: [n drafts saved / not used]
 - [ ] Published via Xquik: [n confirmed posts / not started] (Tweet IDs: [IDs / none])
-- [ ] Xquik publication records: [outputs/x/file#POST n or THREAD n → tweet IDs / none]
-- [ ] Pending Xquik writes: [outputs/x/file#POST n or THREAD n → action ID → validated status URL / none]
+- [ ] Xquik publication records: [source identifier → content fingerprint → tweet ID / none]
+- [ ] Xquik thread status: [outputs/x/file#THREAD n → partial/complete → tweet IDs / none]
+- [ ] Pending Xquik writes: [source identifier → action ID → validated status URL / none]
 - [ ] In-flight Xquik writes: [source identifier → idempotency key → payload fingerprint → state / none]
 - [ ] Published via Blotato — [n posts scheduled / not started]
 - [ ] Performance review

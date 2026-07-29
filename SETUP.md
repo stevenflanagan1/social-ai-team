@@ -165,6 +165,8 @@ Nano Banana is a custom MCP. Find the installation instructions at the link shar
 1. Install [Node.js](https://nodejs.org/) if `npm --version` does not work.
 2. Rerun this repository's installer.
    It installs the official `twitter-text` validator for `/xquik`.
+   Without npm, the installer keeps the other 10 skills ready.
+   It warns and skips only Xquik's validator.
 3. Get an API key from [Xquik](https://xquik.com).
 4. Store it as `XQUIK_API_KEY` through your preferred secret manager.
 5. Follow the [Xquik MCP setup guide](https://docs.xquik.com/mcp/overview).

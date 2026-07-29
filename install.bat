@@ -14,20 +14,19 @@ FOR %%S IN (social-media-manager brand-onboarding content-calendar caption-write
 
 WHERE npm >nul 2>&1
 IF ERRORLEVEL 1 (
-    echo Xquik setup needs Node.js and npm. Install them, then rerun this installer.
-    EXIT /B 1
-)
-
-PUSHD "%SKILLS_DIR%\xquik"
-CALL npm ci --omit=dev --ignore-scripts --no-audit --no-fund
-IF ERRORLEVEL 1 (
+    echo   WARNING  Xquik validator skipped. Other skills remain installed.
+    echo            Install Node.js and npm, then rerun this installer before using /xquik.
+) ELSE (
+    PUSHD "%SKILLS_DIR%\xquik"
+    CALL npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+    IF ERRORLEVEL 1 (
+        echo   WARNING  Xquik validator setup failed. Other skills remain installed.
+        echo            Fix npm, then rerun this installer before using /xquik.
+    ) ELSE (
+        echo   OK  Xquik weighted-length validator
+    )
     POPD
-    echo Xquik weighted-length validator setup failed. Fix npm, then rerun this installer.
-    EXIT /B 1
 )
-POPD
-
-echo   OK  Xquik weighted-length validator
 
 echo.
 echo Done. All 11 skills installed to %SKILLS_DIR%

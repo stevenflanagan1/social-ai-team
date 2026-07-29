@@ -168,7 +168,8 @@ bash install.sh
 **Windows:** double-click `install.bat` (or run it from the command line).
 
 This copies all 11 skills into `~/.claude/skills/` where Claude Code can find them.
-The installer also adds Xquik's official weighted-length validator through npm.
+The installer adds Xquik's official weighted-length validator when npm is available.
+Without npm, it warns and keeps the other skills ready.
 
 ---
 

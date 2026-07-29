@@ -96,7 +96,9 @@ After setup check passes:
    Build an exclusion set from Xquik publication, pending, and in-flight records.
 
    - Match X entries by exact source path and `POST [n]` or `THREAD [n]`.
+   - Match thread progress through `THREAD [n] ITEM [i]/[total]` records.
    - Exclude entries with confirmed Xquik tweet IDs.
+   - Exclude an entire thread when any item has Xquik progress.
    - Exclude entries with a pending Xquik write.
    - Exclude entries with a prepared or sent Xquik idempotency mapping.
    - Resume those entries through `/xquik`, never through Blotato.

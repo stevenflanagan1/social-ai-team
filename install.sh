@@ -28,17 +28,17 @@ for skill in "${SKILLS[@]}"; do
   echo "  ✓ $skill"
 done
 
-if ! command -v npm >/dev/null 2>&1; then
-  echo "Xquik setup needs Node.js and npm. Install them, then rerun this installer."
-  exit 1
+if command -v npm >/dev/null 2>&1; then
+  if (cd "$SKILLS_DIR/xquik" && npm ci --omit=dev --ignore-scripts --no-audit --no-fund); then
+    echo "  ✓ Xquik weighted-length validator"
+  else
+    echo "  ⚠ Xquik validator setup failed. Other skills remain installed."
+    echo "    Fix npm, then rerun this installer before using /xquik."
+  fi
+else
+  echo "  ⚠ Xquik validator skipped. Other skills remain installed."
+  echo "    Install Node.js and npm, then rerun this installer before using /xquik."
 fi
-
-if ! (cd "$SKILLS_DIR/xquik" && npm ci --omit=dev --ignore-scripts --no-audit --no-fund); then
-  echo "Xquik weighted-length validator setup failed. Fix npm, then rerun this installer."
-  exit 1
-fi
-
-echo "  ✓ Xquik weighted-length validator"
 
 echo ""
 echo "Done. All 11 skills installed to $SKILLS_DIR"
