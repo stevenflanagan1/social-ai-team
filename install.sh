@@ -16,6 +16,7 @@ SKILLS=(
   "linkedin-writer"
   "threads-writer"
   "x-writer"
+  "xquik"
   "publisher"
 )
 
@@ -27,6 +28,18 @@ for skill in "${SKILLS[@]}"; do
   echo "  ✓ $skill"
 done
 
+if ! command -v npm >/dev/null 2>&1; then
+  echo "Xquik setup needs Node.js and npm. Install them, then rerun this installer."
+  exit 1
+fi
+
+if ! (cd "$SKILLS_DIR/xquik" && npm ci --omit=dev --ignore-scripts --no-audit --no-fund); then
+  echo "Xquik weighted-length validator setup failed. Fix npm, then rerun this installer."
+  exit 1
+fi
+
+echo "  ✓ Xquik weighted-length validator"
+
 echo ""
-echo "Done. All 10 skills installed to $SKILLS_DIR"
+echo "Done. All 11 skills installed to $SKILLS_DIR"
 echo "Open Claude Code and run /social-media-manager to get started."

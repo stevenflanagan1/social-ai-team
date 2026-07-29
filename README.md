@@ -48,6 +48,11 @@ Built to run inside [Claude Code](https://claude.ai/code).
          │       Punchy, standalone hooks,
          │       280 char limit enforced.
          │
+         ├── /xquik ────────────────────→ Xquik
+         │       Optional. Research, save drafts,
+         │       or publish approved X output
+         │       from Claude Code.
+         │
          │  LAYER 3 — DISTRIBUTION & REVIEW
          ├── /publisher ─────────────────→ Blotato (scheduled posts)
          │       Optional. Schedules content
@@ -67,6 +72,7 @@ Built to run inside [Claude Code](https://claude.ai/code).
 - `/content-calendar` → writes `content-calendar.md` → read by all Layer 2 content skills
 - `/caption-writer` → writes Visual Direction field → read by `/social-creative-designer`
 - `/linkedin-writer`, `/threads-writer`, `/x-writer` → write BLOTATO FLAG field → read by `/publisher`
+- `/x-writer` → writes approved X output → read by `/xquik` for research, drafts, or publishing
 - `/social-performance-review` → updates `best-performers.md` → read by all content skills next month
 
 ---
@@ -100,6 +106,9 @@ Writes Threads posts: short, direct, opinion-led, made for conversation. Strictl
 
 ### `/x-writer` — X/Twitter Content Specialist
 Writes X-native posts and threads. Strictly enforces the 280 character limit with a count on every post. Every post works without context — no warm-ups, no preamble. X thread format (1/, 2/...). Optional X trend research via Tasty Content MCP.
+
+### `/xquik`: Xquik Research & Publishing
+Optional Claude Code route for X research, saved drafts, and immediate publishing. It uses Xquik's native MCP for cataloged research and drafts. Approved publishing follows Xquik's idempotent REST lifecycle.
 
 ### `/publisher` — Social Media Publisher
 Takes approved content from any content skill and schedules it via Blotato MCP. Checks the Blotato connection first — shows a clear setup message if not connected. Generates infographic visuals (stat cards, framework diagrams, 3-step process graphics, quote graphics) for posts flagged by platform specialists. Full schedule confirmation before submitting anything. Blotato is optional — all other skills work without it.
@@ -158,7 +167,8 @@ bash install.sh
 
 **Windows:** double-click `install.bat` (or run it from the command line).
 
-This copies all 10 skills into `~/.claude/skills/` where Claude Code can find them.
+This copies all 11 skills into `~/.claude/skills/` where Claude Code can find them.
+The installer also adds Xquik's official weighted-length validator through npm.
 
 ---
 
@@ -171,6 +181,7 @@ Some skills use MCP tools for enhanced functionality. Skills work in **baseline 
 | **Playwright** | `/brand-onboarding` | Evidence capture from website + Instagram |
 | **Nano Banana** | `/social-creative-designer` | AI image generation (required for branded visuals) |
 | **Blotato** | `/publisher` | Post scheduling + infographic generation (optional — only needed for publishing) |
+| **Xquik** | `/xquik` | X research, saved drafts, and immediate publishing (optional) |
 | **Firecrawl** | `/content-calendar`, `/caption-writer`, `/social-performance-review`, `/linkedin-writer`, `/x-writer` | Competitor content research (optional) |
 | **SerpApi** | `/content-calendar`, `/caption-writer` | Trend research (optional) |
 | **Tasty Content** | `/x-writer` | X/Twitter trend research (optional) |
@@ -202,6 +213,7 @@ The orchestrator will detect that no brand file exists and walk you through `/br
 /linkedin-writer
 /threads-writer
 /x-writer
+/xquik
 /publisher
 /social-performance-review
 ```
@@ -213,6 +225,14 @@ After writing LinkedIn, Threads, or X content with the platform specialists:
 /publisher
 ```
 The publisher checks your Blotato connection, reviews flagged infographic opportunities, confirms the schedule, and submits. Requires Blotato to be configured first — see the MCP Requirements section above.
+
+### Researching or publishing approved X content with Xquik
+
+After approving output from `/x-writer`:
+```
+/xquik
+```
+This reads approved `outputs/x/` content. It can research X, save drafts, or publish immediately. Every mutation requires explicit approval. Use `/publisher` for scheduled posts.
 
 ### Monthly workflow (existing client)
 ```
@@ -242,12 +262,14 @@ Three reference documents are bundled with the relevant skills:
 
 | File | Used by | Contents |
 |---|---|---|
-| `content-calendar/references/content-mix-guide.md` | `/content-calendar` | Recommended pillar ratios by business type |
-| `caption-writer/references/hook-library.md` | `/caption-writer` | 40+ hook formulas by type |
-| `social-performance-review/references/benchmarks.md` | `/social-performance-review` | Engagement benchmarks by platform and account size |
+| `skills/content-calendar/references/content-mix-guide.md` | `/content-calendar` | Recommended pillar ratios by business type |
+| `skills/caption-writer/references/hook-library.md` | `/caption-writer` | 40+ hook formulas by type |
+| `skills/social-performance-review/references/benchmarks.md` | `/social-performance-review` | Engagement benchmarks by platform and account size |
 
 ---
 
 ## License
 
 Created by the AI Impact use it, adapt it, build on it. Want a custom build? https://theaiimpact.co/ 
+
+Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.

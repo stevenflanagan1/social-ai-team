@@ -72,7 +72,7 @@ This copies the skills into the right place so Claude Code can find them.
    ```bash
    bash install.sh
    ```
-4. You should see 10 skills listed with checkmarks. Done.
+4. You should see 11 skills listed with checkmarks. Done.
 
 ### Windows
 
@@ -80,7 +80,7 @@ This copies the skills into the right place so Claude Code can find them.
 2. Double-click `install.bat`
 3. A command window will open, install the skills, and close. Done.
 
-**What this does:** Copies all 10 skill folders into `~/.claude/skills/` — the location Claude Code checks for available skills.
+**What this does:** Copies all 11 skill folders into `~/.claude/skills/`. Claude Code loads skills from this location.
 
 ---
 
@@ -154,6 +154,33 @@ Nano Banana is a custom MCP. Find the installation instructions at the link shar
 
 ---
 
+### MCP 5: Xquik for X Research & Publishing (Optional)
+
+**Used by:** `/xquik`
+
+**What it does:** Adds X research and saved drafts to Claude Code. The `/xquik` skill can also publish approved X posts through Xquik's REST API. Use `/publisher` instead when you need scheduling.
+
+**How to install:**
+
+1. Install [Node.js](https://nodejs.org/) if `npm --version` does not work.
+2. Rerun this repository's installer.
+   It installs the official `twitter-text` validator for `/xquik`.
+3. Get an API key from [Xquik](https://xquik.com).
+4. Store it as `XQUIK_API_KEY` through your preferred secret manager.
+5. Follow the [Xquik MCP setup guide](https://docs.xquik.com/mcp/overview).
+6. Add the Xquik MCP to Claude Code from Terminal or PowerShell:
+   ```bash
+   claude mcp add-json --scope user xquik '{"type":"http","url":"https://xquik.com/mcp","headers":{"x-api-key":"${XQUIK_API_KEY}"}}'
+   ```
+7. Verify the connection:
+   ```bash
+   claude mcp list
+   ```
+
+Never commit an API key or paste one into a Claude conversation.
+
+---
+
 ### Summary: What to install first
 
 | Priority | MCP | Why |
@@ -161,6 +188,7 @@ Nano Banana is a custom MCP. Find the installation instructions at the link shar
 | Install first | **Playwright** | Makes brand onboarding work properly |
 | Install first | **Nano Banana** | Required for any visual creation |
 | Install if publishing | **Blotato** | Only needed for direct scheduling |
+| Install for X workflows | **Xquik** | Research, drafts, and immediate X publishing |
 | Install later | **Firecrawl** | Makes research better — not essential on day one |
 
 ---
@@ -222,7 +250,7 @@ This file is what every other skill reads. Get it right and the whole system imp
 Once brand setup is done, build the first content calendar. The AI will ask about the month, posting frequency, platforms, and any upcoming events or campaigns. Output: `context/content-calendar.md`.
 
 **4. Run `/caption-writer` or platform specialist skills**
-Write captions from the calendar. Use `/caption-writer` for Instagram/Facebook. Use `/linkedin-writer`, `/threads-writer`, or `/x-writer` for those platforms specifically.
+Write captions from the calendar. Use `/caption-writer` for Instagram/Facebook. Use `/linkedin-writer`, `/threads-writer`, or `/x-writer` for those platforms specifically. Use `/xquik` only after X copy is approved. It can research X, save drafts, or publish immediately.
 
 **5. Run `/social-creative-designer`** (needs Nano Banana)
 Generate visuals for posts that need them. Works per-post — you review and approve each one before moving on.
@@ -270,6 +298,7 @@ Run skills directly:
   /linkedin-writer        → LinkedIn-native posts
   /threads-writer         → Threads posts
   /x-writer               → X/Twitter posts
+  /xquik                  → X research, drafts, and immediate publishing
   /social-creative-designer  → AI visuals (Nano Banana)
   /publisher              → schedule via Blotato (optional)
   /social-performance-review → end-of-month analysis
