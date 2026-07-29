@@ -123,12 +123,16 @@ Items: [count]
 Text: [exact approved post or numbered thread]
 Weighted length: [n]/280 for each item
 Media: [URLs or none]
-Reply target: [tweet URL or ID, or none]
+Reply plan: [standalone target, or item 1 target plus a sequential thread chain]
 Side effect: creates a saved draft / publishes publicly on X
 ```
 
 Proceed only after the operator explicitly approves this exact action.
-Changing the text, account, media, reply target, or action needs new approval.
+For a thread, approval includes its deterministic parent chain.
+Item 1 uses the shown external target or none.
+Each later item replies to the preceding approved item after its ID is confirmed.
+Those generated parent IDs do not require new approval.
+Changing the text, account, media, external target, thread order, or action requires new approval.
 
 ---
 
@@ -186,7 +190,8 @@ Before publishing:
 10. Require a separate explicit republish approval before publishing completed content again.
 11. Preserve the original record and identify the new attempt as `REPUBLISH [n]`.
 12. Before each unconfirmed item, build its exact approved JSON payload.
-    Include the confirmed previous tweet ID for a thread reply.
+    Include the confirmed preceding item ID for the approved thread chain.
+    Stop if the reply target points anywhere else.
 13. Calculate the payload fingerprint using the same canonical JSON rules.
 14. If a matching `accepted` mapping has a validated status URL, poll it.
     Never send its POST again.
