@@ -1,0 +1,812 @@
+<title>Social AI Team Teardown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+
+<style>
+  :root {
+    --paper:      #E9ECF0;
+    --surface:    #FFFFFF;
+    --surface-2:  #F3F5F8;
+    --ink:        #12181F;
+    --ink-soft:   #59636F;
+    --ink-faint:  #8A939E;
+    --rule:       #C9D0D9;
+    --blue:       #0B5FBF;
+    --blue-wash:  #E2ECFA;
+    --pink:       #C9146F;
+    --pink-wash:  #FBE4F0;
+
+    --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --f-body:    "Source Serif 4", Georgia, "Times New Roman", serif;
+    --f-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --measure: 68ch;
+    --pad: clamp(1.15rem, 4vw, 3rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:     #0D1219;
+      --surface:   #161C25;
+      --surface-2: #1D242E;
+      --ink:       #E6EBF1;
+      --ink-soft:  #9AA6B4;
+      --ink-faint: #6C7885;
+      --rule:      #2C3542;
+      --blue:      #6BAAF5;
+      --blue-wash: #16283F;
+      --pink:      #FF6FB4;
+      --pink-wash: #34142A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:     #0D1219;
+    --surface:   #161C25;
+    --surface-2: #1D242E;
+    --ink:       #E6EBF1;
+    --ink-soft:  #9AA6B4;
+    --ink-faint: #6C7885;
+    --rule:      #2C3542;
+    --blue:      #6BAAF5;
+    --blue-wash: #16283F;
+    --pink:      #FF6FB4;
+    --pink-wash: #34142A;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 var(--pad); }
+  .col  { max-width: var(--measure); }
+
+  /* ---------- type ---------- */
+  h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+  h1 { font-size: clamp(2.4rem, 6.5vw, 4.1rem); font-weight: 800; letter-spacing: -0.028em; }
+  h2 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 700; letter-spacing: -0.02em; }
+  h3 { font-size: 1.16rem; font-weight: 700; letter-spacing: -0.008em; }
+  h4 { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+  p  { margin: 0 0 1em; }
+  a  { color: var(--blue); text-underline-offset: 3px; }
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 2px; }
+
+  .eyebrow {
+    font-family: var(--f-display); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.17em; text-transform: uppercase; color: var(--blue);
+    display: block; margin-bottom: 0.9rem;
+  }
+  .eyebrow.pink { color: var(--pink); }
+  code, .mono { font-family: var(--f-mono); font-size: 0.855em; }
+  code { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 3px; padding: 0.1em 0.36em; }
+  .lede { font-size: clamp(1.08rem, 2.1vw, 1.3rem); line-height: 1.5; color: var(--ink-soft); }
+
+  /* ---------- header ---------- */
+  header.masthead { padding: clamp(3rem, 8vw, 5.5rem) 0 0; }
+  .stamp {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-soft);
+    border: 1px solid var(--rule); border-radius: 100px;
+    padding: 0.34rem 0.8rem; margin-bottom: 1.5rem;
+  }
+  .stamp b { color: var(--blue); font-weight: 600; }
+  .headline-rule { height: 3px; background: var(--ink); width: 100%; margin: 2.4rem 0 0; }
+
+  .facts {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0; border-bottom: 1px solid var(--rule);
+  }
+  .fact { padding: 1.1rem 1.2rem 1.2rem 0; }
+  .fact .n { font-family: var(--f-display); font-weight: 800; font-size: 1.9rem; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; display: block; line-height: 1; }
+  .fact .l { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-soft); margin-top: 0.45rem; display: block; }
+  .fact.gap .n { color: var(--pink); }
+
+  /* ---------- sections ---------- */
+  section { padding: clamp(3.2rem, 7vw, 5.2rem) 0; border-top: 1px solid var(--rule); }
+  section:first-of-type { border-top: 0; }
+  .sec-head { margin-bottom: 2.2rem; }
+  .sec-head p { margin-top: 0.9rem; }
+
+  /* ---------- figures ---------- */
+  figure { margin: 2.2rem 0; }
+  .fig-frame {
+    background: var(--surface); border: 1px solid var(--rule);
+    padding: clamp(0.9rem, 2.5vw, 1.7rem); overflow-x: auto;
+  }
+  figure svg { display: block; width: 100%; height: auto; min-width: 640px; color: var(--ink); }
+  figcaption {
+    font-family: var(--f-mono); font-size: 0.74rem; line-height: 1.55;
+    color: var(--ink-soft); margin-top: 0.85rem; max-width: 62ch;
+  }
+  .d-box    { fill: var(--surface-2); stroke: currentColor; stroke-width: 1.4; }
+  .d-box-b  { fill: var(--blue-wash); stroke: var(--blue); stroke-width: 1.4; }
+  .d-box-p  { fill: var(--pink-wash); stroke: var(--pink); stroke-width: 1.4; stroke-dasharray: 5 3; }
+  .d-band   { fill: none; stroke: var(--rule); stroke-width: 1; stroke-dasharray: 3 4; }
+  .d-t      { fill: currentColor; font-family: var(--f-mono); font-size: 12px; }
+  .d-t-s    { fill: var(--ink-soft); font-family: var(--f-mono); font-size: 10.5px; }
+  .d-t-p    { fill: var(--pink); font-family: var(--f-mono); font-size: 12px; }
+  .d-eye    { fill: var(--blue); font-family: var(--f-display); font-size: 10px; font-weight: 700; letter-spacing: 0.13em; }
+  .d-eye-p  { fill: var(--pink); font-family: var(--f-display); font-size: 10px; font-weight: 700; letter-spacing: 0.13em; }
+  .d-arr    { stroke: currentColor; stroke-width: 1.4; fill: none; }
+  .d-arr-d  { stroke: var(--blue); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+  .d-lab    { fill: var(--ink-soft); font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.01em; }
+  .d-lab-b  { fill: var(--blue); font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.01em; }
+
+  /* ---------- step list ---------- */
+  .steps { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .step { background: var(--surface); padding: clamp(1.1rem, 2.6vw, 1.6rem); display: grid; grid-template-columns: 2.6rem 1fr; gap: 0 1rem; }
+  .step .num {
+    font-family: var(--f-mono); font-size: 0.75rem; font-weight: 600; color: var(--blue);
+    padding-top: 0.28rem; font-variant-numeric: tabular-nums;
+  }
+  .step .cmd { font-family: var(--f-mono); font-size: 0.98rem; font-weight: 600; letter-spacing: -0.01em; }
+  .step .role { font-family: var(--f-display); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; color: var(--ink-faint); display: block; margin-top: 0.3rem; }
+  .step .body { font-size: 0.95rem; margin: 0.85rem 0 0; color: var(--ink-soft); max-width: 60ch; }
+  .step .body strong { color: var(--ink); font-weight: 600; }
+  .io { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.65rem 1.4rem; margin-top: 1.1rem; padding-top: 1rem; border-top: 1px dashed var(--rule); }
+  .io dt { font-family: var(--f-display); font-size: 0.63rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; color: var(--ink-faint); }
+  .io dd { margin: 0.28rem 0 0; font-family: var(--f-mono); font-size: 0.76rem; line-height: 1.5; color: var(--ink); word-break: break-word; }
+  .io dd.none { color: var(--ink-faint); }
+  .gate { grid-column: 1 / -1; margin-top: 1rem; font-family: var(--f-mono); font-size: 0.72rem; color: var(--blue); border-left: 2px solid var(--blue); padding-left: 0.7rem; }
+
+  /* ---------- gaps ---------- */
+  .tier { margin-top: 2.6rem; }
+  .tier-head { display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap; border-bottom: 2px solid var(--ink); padding-bottom: 0.6rem; margin-bottom: 1.5rem; }
+  .tier-head h3 { font-size: 1.3rem; }
+  .tier-head .count { font-family: var(--f-mono); font-size: 0.72rem; color: var(--ink-soft); margin-left: auto; }
+  .gaps { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .gap { background: var(--surface); padding: clamp(1.05rem, 2.4vw, 1.5rem); }
+  .gap-top { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+  .gap-top h4 { font-size: 1.02rem; text-transform: none; letter-spacing: -0.008em; color: var(--ink); font-weight: 700; }
+  .tape {
+    font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.09em; text-transform: uppercase;
+    background: var(--pink-wash); color: var(--pink); border: 1px solid var(--pink);
+    padding: 0.14rem 0.44rem; white-space: nowrap;
+  }
+  .tape.ok { background: var(--blue-wash); color: var(--blue); border-color: var(--blue); }
+  .gap p { font-size: 0.94rem; margin: 0.7rem 0 0; color: var(--ink-soft); max-width: 66ch; }
+  .gap p.fix { color: var(--ink); }
+  .gap p.fix::before { content: "Fix "; font-family: var(--f-display); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; color: var(--pink); margin-right: 0.5rem; }
+  .evidence { font-family: var(--f-mono); font-size: 0.72rem; color: var(--ink-faint); margin-top: 0.7rem; line-height: 1.55; }
+  .evidence b { color: var(--ink-soft); font-weight: 400; }
+
+  /* ---------- callout ---------- */
+  .spec { background: var(--surface); border: 1px solid var(--rule); border-left: 3px solid var(--pink); padding: clamp(1.2rem, 3vw, 1.8rem); margin: 2rem 0; }
+  .spec h3 { margin-bottom: 0.4rem; }
+  .spec ol { margin: 1rem 0 0; padding-left: 1.15rem; font-size: 0.94rem; color: var(--ink-soft); }
+  .spec ol li { margin-bottom: 0.5rem; }
+  .spec ol li strong { color: var(--ink); font-weight: 600; }
+  .note { background: var(--blue-wash); border: 1px solid var(--blue); padding: clamp(1rem, 2.6vw, 1.5rem); margin: 2rem 0; }
+  .note h4 { color: var(--blue); margin-bottom: 0.55rem; }
+  .note p { font-size: 0.95rem; margin: 0; }
+  .note p + p { margin-top: 0.7rem; }
+
+  ul.tight { padding-left: 1.15rem; margin: 0.8rem 0 0; }
+  ul.tight li { margin-bottom: 0.45rem; font-size: 0.95rem; color: var(--ink-soft); }
+  ul.tight li strong { color: var(--ink); font-weight: 600; }
+
+  footer { border-top: 3px solid var(--ink); padding: 2.4rem 0 4rem; font-family: var(--f-mono); font-size: 0.76rem; color: var(--ink-soft); }
+  footer a { color: var(--blue); }
+
+  @media (max-width: 620px) {
+    .step { grid-template-columns: 1fr; }
+    .step .num { padding-top: 0; margin-bottom: 0.3rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <span class="stamp">Repo teardown <b>·</b> stevenflanagan1/social-ai-team <b>·</b> main</span>
+    <h1>A social media agency,<br>written as ten markdown files.</h1>
+    <div class="headline-rule"></div>
+  </header>
+
+  <section>
+    <div class="col">
+      <p class="lede">Every skill in this repo is a job description. Claude reads one, becomes that specialist, does the work, writes a file, and hands the file to the next specialist. Nothing runs as code — the whole system is a set of instructions plus a filing convention. This page walks the pipeline step by step, then marks what is missing before you build v2.</p>
+    </div>
+
+    <div class="facts" style="margin-top: 2.6rem;">
+      <div class="fact"><span class="n">10</span><span class="l">Skills</span></div>
+      <div class="fact"><span class="n">3</span><span class="l">Pipeline layers</span></div>
+      <div class="fact"><span class="n">3,330</span><span class="l">Lines of instruction</span></div>
+      <div class="fact"><span class="n">6</span><span class="l">MCP servers referenced</span></div>
+      <div class="fact gap"><span class="n">17</span><span class="l">Gaps found</span></div>
+    </div>
+
+    <figure>
+      <div class="fig-frame">
+        <svg viewBox="0 0 1040 440" role="img" aria-label="The pipeline: brand-onboarding and content-calendar write context files, which five content skills read to produce outputs, which the publisher schedules and the performance review analyses, feeding best-performers.md back into next month's calendar.">
+          <defs>
+            <marker id="ah1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"></path>
+            </marker>
+            <marker id="ah1b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--blue)"></path>
+            </marker>
+          </defs>
+
+          <rect class="d-band" x="18" y="34" width="222" height="290"></rect>
+          <rect class="d-band" x="300" y="34" width="252" height="290"></rect>
+          <rect class="d-band" x="648" y="34" width="230" height="290"></rect>
+
+          <text class="d-eye" x="18" y="24">LAYER 1 · FOUNDATION</text>
+          <text class="d-eye" x="300" y="24">LAYER 2 · CONTENT CREATION</text>
+          <text class="d-eye" x="648" y="24">LAYER 3 · DISTRIBUTION</text>
+
+          <rect class="d-box-b" x="34" y="76" width="190" height="46"></rect>
+          <text class="d-t" x="46" y="97">/brand-onboarding</text>
+          <text class="d-t-s" x="46" y="112">once per client</text>
+
+          <path class="d-arr" d="M 129 122 L 129 172" marker-end="url(#ah1)"></path>
+          <text class="d-lab" x="137" y="152">brand-style.md</text>
+
+          <rect class="d-box-b" x="34" y="174" width="190" height="46"></rect>
+          <text class="d-t" x="46" y="195">/content-calendar</text>
+          <text class="d-t-s" x="46" y="210">monthly · ~16 slots</text>
+
+          <rect class="d-box" x="316" y="52" width="220" height="40"></rect>
+          <text class="d-t" x="328" y="77">/caption-writer</text>
+          <rect class="d-box" x="316" y="104" width="220" height="40"></rect>
+          <text class="d-t" x="328" y="129">/social-creative-designer</text>
+          <rect class="d-box" x="316" y="156" width="220" height="40"></rect>
+          <text class="d-t" x="328" y="181">/linkedin-writer</text>
+          <rect class="d-box" x="316" y="208" width="220" height="40"></rect>
+          <text class="d-t" x="328" y="233">/threads-writer</text>
+          <rect class="d-box" x="316" y="260" width="220" height="40"></rect>
+          <text class="d-t" x="328" y="285">/x-writer</text>
+
+          <path class="d-arr" d="M 224 197 L 262 197 L 262 72 L 314 72" marker-end="url(#ah1)"></path>
+          <path class="d-arr" d="M 262 197 L 262 176 L 314 176" marker-end="url(#ah1)"></path>
+          <path class="d-arr" d="M 262 197 L 262 228 L 314 228" marker-end="url(#ah1)"></path>
+          <path class="d-arr" d="M 262 197 L 262 280 L 314 280" marker-end="url(#ah1)"></path>
+          <text class="d-lab" x="188" y="342">content-calendar.md</text>
+          <path class="d-arr" d="M 262 320 L 262 200" stroke-dasharray="2 3"></path>
+
+          <path class="d-arr" d="M 426 92 L 426 102" marker-end="url(#ah1)"></path>
+          <text class="d-lab" x="434" y="101">Visual Direction field</text>
+
+          <path class="d-arr" d="M 536 176 L 592 176 L 592 138 L 646 138" marker-end="url(#ah1)"></path>
+          <path class="d-arr" d="M 536 228 L 592 228 L 592 176" ></path>
+          <path class="d-arr" d="M 536 280 L 592 280 L 592 232" ></path>
+          <text class="d-lab" x="546" y="128">BLOTATO FLAG field</text>
+
+          <rect class="d-box-b" x="664" y="116" width="198" height="46"></rect>
+          <text class="d-t" x="676" y="137">/publisher</text>
+          <text class="d-t-s" x="676" y="152">Blotato · optional</text>
+
+          <rect class="d-box-b" x="664" y="212" width="198" height="46"></rect>
+          <text class="d-t" x="676" y="233">/social-performance-</text>
+          <text class="d-t" x="676" y="248">review</text>
+
+          <path class="d-arr" d="M 763 162 L 763 210" marker-end="url(#ah1)"></path>
+          <text class="d-lab" x="771" y="192">posted → measured</text>
+
+          <path class="d-arr-d" d="M 862 235 L 940 235 L 940 396 L 129 396 L 129 222" marker-end="url(#ah1b)"></path>
+          <text class="d-lab-b" x="404" y="388">best-performers.md → re-weights next month's pillars</text>
+
+          <rect class="d-box" x="18" y="352" width="222" height="0"></rect>
+        </svg>
+      </div>
+      <figcaption>The whole system. Solid arrows are file handoffs; the dashed blue arrow is the only loop — last month's results change next month's plan. Everything crossing a boundary is a markdown file on disk, which is why any step can be resumed or redone on its own.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head col">
+      <span class="eyebrow">The mental model</span>
+      <h2>Three ideas hold it together</h2>
+      <p>If someone only takes away three things about how this repo works, make it these.</p>
+    </div>
+
+    <div class="col">
+      <h3>1 — A skill is an instruction file, not a program</h3>
+      <p>Each <code>SKILL.md</code> has a frontmatter <code>description</code> and a body. The description is the only part Claude reads up front; it is how the model decides <em>whether</em> to use the skill at all. The body loads only once the skill fires. Files in <code>references/</code> load later still, on demand.</p>
+    </div>
+
+    <figure>
+      <div class="fig-frame">
+        <svg viewBox="0 0 1000 250" role="img" aria-label="Anatomy of a skill: the frontmatter description is always in context and drives routing; the body loads on invocation; reference files load only when the body asks for them.">
+          <defs>
+            <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+
+          <text class="d-eye" x="30" y="26">ALWAYS IN CONTEXT</text>
+          <rect class="d-box-b" x="30" y="40" width="250" height="72"></rect>
+          <text class="d-t" x="44" y="63">description: "Writes on-</text>
+          <text class="d-t" x="44" y="80">brand captions for SMBs…"</text>
+          <text class="d-t-s" x="44" y="99">~60 words · the router</text>
+
+          <path class="d-arr" d="M 280 76 L 348 76" marker-end="url(#ah2)"></path>
+          <text class="d-lab" x="286" y="66">matches the ask</text>
+
+          <text class="d-eye" x="350" y="26">LOADS ON INVOCATION</text>
+          <rect class="d-box" x="350" y="40" width="250" height="72"></rect>
+          <text class="d-t" x="364" y="63">SKILL.md body</text>
+          <text class="d-t-s" x="364" y="80">Phase 0 → Phase 5</text>
+          <text class="d-t-s" x="364" y="97">224–420 lines</text>
+
+          <path class="d-arr" d="M 600 76 L 668 76" marker-end="url(#ah2)"></path>
+          <text class="d-lab" x="606" y="66">only if asked</text>
+
+          <text class="d-eye" x="670" y="26">LOADS ON DEMAND</text>
+          <rect class="d-box" x="670" y="40" width="250" height="72"></rect>
+          <text class="d-t" x="684" y="63">references/*.md</text>
+          <text class="d-t-s" x="684" y="80">hook-library · benchmarks</text>
+          <text class="d-t-s" x="684" y="97">content-mix-guide</text>
+
+          <path class="d-arr" d="M 155 112 L 155 168" marker-end="url(#ah2)"></path>
+          <rect class="d-box" x="30" y="170" width="890" height="52"></rect>
+          <text class="d-t" x="44" y="192">Cost of the current build: 3 of 10 skills use references/ — the other 7 load everything, every time.</text>
+          <text class="d-t-s" x="44" y="210">This is what SETUP.md's "Why is my usage running out?" question is actually about.</text>
+        </svg>
+      </div>
+      <figcaption>Progressive disclosure is the lever that controls context cost. The repo uses it in three skills and not in the seven that would benefit most — <code>/social-creative-designer</code> alone is 420 lines, most of it prompt templates that only one of its four modes ever needs.</figcaption>
+    </figure>
+
+    <div class="col">
+      <h3>2 — <code>context/</code> is shared memory, <code>outputs/</code> is the deliverable</h3>
+      <p>Skills never talk to each other directly. They read and write files in the client folder, and the folder is the state of the engagement. Open Claude Code in a different client folder and you get a different team with a different brand in its head. It also means a session that dies mid-month loses nothing.</p>
+
+      <h3>3 — Typed fields are the handoff contract</h3>
+      <p>This is the sharpest idea in the repo and the easiest to miss. A skill doesn't just write prose for a human — it writes named fields that a specific downstream skill is instructed to look for. That is what turns ten separate skills into one pipeline.</p>
+    </div>
+
+    <figure>
+      <div class="fig-frame">
+        <svg viewBox="0 0 1000 300" role="img" aria-label="Three handoff contracts: caption-writer writes a Visual Direction field read by the creative designer; the platform writers write a BLOTATO FLAG field read by the publisher; four skills write workflow-status.md which the orchestrator reads to resume.">
+          <defs>
+            <marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+
+          <text class="d-eye" x="30" y="24">WRITER</text>
+          <text class="d-eye" x="352" y="24">FIELD WRITTEN INTO THE FILE</text>
+          <text class="d-eye" x="778" y="24">READER</text>
+
+          <rect class="d-box" x="30" y="40" width="200" height="44"></rect>
+          <text class="d-t" x="42" y="67">/caption-writer</text>
+          <path class="d-arr" d="M 230 62 L 348 62" marker-end="url(#ah3)"></path>
+          <rect class="d-box-b" x="350" y="40" width="400" height="44"></rect>
+          <text class="d-t" x="364" y="67">VISUAL DIRECTION: close-up, warm tones…</text>
+          <path class="d-arr" d="M 750 62 L 774 62" marker-end="url(#ah3)"></path>
+          <rect class="d-box" x="776" y="40" width="194" height="44"></rect>
+          <text class="d-t" x="788" y="61">/social-creative-</text>
+          <text class="d-t" x="788" y="76">designer</text>
+
+          <rect class="d-box" x="30" y="112" width="200" height="60"></rect>
+          <text class="d-t" x="42" y="133">/linkedin-writer</text>
+          <text class="d-t" x="42" y="149">/threads-writer</text>
+          <text class="d-t" x="42" y="165">/x-writer</text>
+          <path class="d-arr" d="M 230 142 L 348 142" marker-end="url(#ah3)"></path>
+          <rect class="d-box-b" x="350" y="120" width="400" height="44"></rect>
+          <text class="d-t" x="364" y="147">BLOTATO FLAG: Yes — stat card</text>
+          <path class="d-arr" d="M 750 142 L 774 142" marker-end="url(#ah3)"></path>
+          <rect class="d-box" x="776" y="120" width="194" height="44"></rect>
+          <text class="d-t" x="788" y="147">/publisher</text>
+
+          <rect class="d-box" x="30" y="200" width="200" height="60"></rect>
+          <text class="d-t-s" x="42" y="222">calendar · captions ·</text>
+          <text class="d-t-s" x="42" y="238">designer · publisher</text>
+          <text class="d-t-s" x="42" y="254">(4 writers, no schema)</text>
+          <path class="d-arr" d="M 230 230 L 348 230" marker-end="url(#ah3)"></path>
+          <rect class="d-box-b" x="350" y="208" width="400" height="44"></rect>
+          <text class="d-t" x="364" y="235">context/workflow-status.md</text>
+          <path class="d-arr" d="M 750 230 L 774 230" marker-end="url(#ah3)"></path>
+          <rect class="d-box" x="776" y="208" width="194" height="44"></rect>
+          <text class="d-t" x="788" y="229">/social-media-</text>
+          <text class="d-t" x="788" y="244">manager</text>
+        </svg>
+      </div>
+      <figcaption>Three contracts carry the whole pipeline. The first two are single-writer and work well. The third — the resume file — is written by four skills against no agreed schema, which is the one to formalise in v2.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head col">
+      <span class="eyebrow">Step by step</span>
+      <h2>What each skill actually does</h2>
+      <p>Run in order for a new client. In practice most sessions are a single step — the orchestrator's Route E, "just do this one thing".</p>
+    </div>
+
+    <div class="steps">
+
+      <article class="step">
+        <div class="num">00</div>
+        <div>
+          <div class="cmd">/social-media-manager</div>
+          <span class="role">Orchestrator</span>
+          <p class="body">Reads every context file that exists and prints a status line — brand set up or not, calendar built or not, captions written, last review score. Then routes: <strong>A</strong> new client, <strong>B</strong> monthly production, <strong>C</strong> end-of-month review, <strong>D</strong> resume mid-workflow, <strong>E</strong> one-off task, <strong>F</strong> platform-specific content. It never does the work itself; it invokes a specialist and comes back.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>all of <span class="mono">context/</span> + latest outputs</dd></div>
+            <div><dt>Writes</dt><dd>context/workflow-status.md</dd></div>
+            <div><dt>Hands to</dt><dd>whichever specialist the route needs</dd></div>
+          </dl>
+          <div class="gate">Approval gate at every handoff — a calendar nobody checked produces sixteen captions for the wrong content.</div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="num">01</div>
+        <div>
+          <div class="cmd">/brand-onboarding</div>
+          <span class="role">Brand strategist · once per client</span>
+          <p class="body">Drives a browser to the client's website and Instagram, screenshots both, and extracts everything provable — bio, product range, stated values, customer language, dominant colours, typography feel. Anything read off a screenshot is marked <em>(estimated)</em>. Then it generates a client-facing doc that <strong>pre-fills the known facts and only asks the genuine gaps</strong>: hex codes, fonts, ICP, hero SKUs, do/don't rules. The answers are synthesised into the brand guide every other skill reads.</p>
+          <dl class="io">
+            <div><dt>Needs</dt><dd>website URL · IG handle · Playwright MCP</dd></div>
+            <div><dt>Asks for</dt><dd>high-res product photos (non-negotiable)</dd></div>
+            <div><dt>Writes</dt><dd>context/brand-style.md<br>assets/products/ · assets/lifestyle/</dd></div>
+          </dl>
+          <div class="gate">The signature post format and 3–5 real example captions are the highest-value fields in the file. They are what stop the output reading as generic AI.</div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="num">02</div>
+        <div>
+          <div class="cmd">/content-calendar</div>
+          <span class="role">Strategist · monthly</span>
+          <p class="body">Locks upcoming events first, then sets <strong>pillar ratios</strong> (educational / BTS / showcase / social proof / promo, capped at ~20% promotional) and a <strong>format mix</strong> (40–50% single image, 25–30% carousel, 20–25% reel). Only then does it fill roughly sixteen slots. Every slot carries a specific topic, an angle, an objective and a one-line visual direction — never "educational post".</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>brand-style.md · best-performers.md · upcoming-events.md</dd></div>
+            <div><dt>Optional</dt><dd>Firecrawl · SerpApi for competitor + trend research</dd></div>
+            <div><dt>Writes</dt><dd>context/content-calendar.md</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="num">03</div>
+        <div>
+          <div class="cmd">/caption-writer</div>
+          <span class="role">Copywriter · Instagram + Facebook</span>
+          <p class="body">Picks one of six frameworks per post — Hook/Story/Lesson/CTA, Problem/Agitate/Solve, Before/After/Bridge, list teaser, contrarian take, question hook — and states which it used, so iteration is fast. Enforces a banned-phrase list and per-platform length, line-break and hashtag rules. Pulls openers from a 40+ formula hook library held in <code>references/</code>.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>content-calendar.md · brand-style.md · best-performers.md</dd></div>
+            <div><dt>Writes</dt><dd>outputs/captions/[client]-captions-[month].md</dd></div>
+            <div><dt>Hands to</dt><dd>designer, via the Visual Direction field</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="num">04</div>
+        <div>
+          <div class="cmd">/social-creative-designer</div>
+          <span class="role">Art director · Nano Banana</span>
+          <p class="body">Four modes. <strong>Generate</strong> builds a lifestyle image from nothing. <strong>Composite</strong> drops the client's real product photo into an AI-generated scene. <strong>Brand</strong> adds only a text overlay to a real photo. <strong>Stop-Motion</strong> renders six frames of one action and exports a looping MP4 Reel. Every prompt must carry all six elements — subject, composition, action, location, style, camera + lighting.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>brand-style.md · Visual Direction field · assets/products/</dd></div>
+            <div><dt>Writes</dt><dd>outputs/creatives/*.png · prompts-used.md · creative-brief.md</dd></div>
+            <div><dt>Guard</dt><dd>product pixels are never AI-approximated</dd></div>
+          </dl>
+          <div class="gate">The best commercial rule in the repo: for any post featuring a real SKU, Composite mode is the default and the packaging must come from the client's own file. An AI-guessed label is not client-ready.</div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="num">05</div>
+        <div>
+          <div class="cmd">/linkedin-writer · /threads-writer · /x-writer</div>
+          <span class="role">Platform specialists</span>
+          <p class="body">Written from first principles per platform, not adapted from the Instagram caption — and the orchestrator explicitly forbids using <code>/caption-writer</code> for these. LinkedIn: first-person, one idea per line, 3–5 hashtags. Threads: opinion over instruction, <strong>500 characters enforced with a count on every post</strong>. X: every post must stand alone with no context, <strong>280 enforced</strong>, thread format when longer.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>content-calendar.md · brand-style.md</dd></div>
+            <div><dt>Writes</dt><dd>outputs/linkedin/ · outputs/threads/ · outputs/x/</dd></div>
+            <div><dt>Hands to</dt><dd>publisher, via BLOTATO FLAG</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="num">06</div>
+        <div>
+          <div class="cmd">/publisher</div>
+          <span class="role">Scheduler · optional layer</span>
+          <p class="body">Phase 0 calls Blotato for the connected account list and <strong>hard-stops with setup instructions if there is nothing there</strong> — no half-working session, no confusing API errors. Then it reads the BLOTATO FLAG on each post, generates infographics only for posts that asked for one, and presents the entire proposed schedule for approval before a single post is submitted.</p>
+          <dl class="io">
+            <div><dt>Needs</dt><dd>Blotato MCP · connected accounts</dd></div>
+            <div><dt>Reads</dt><dd>outputs/linkedin/ · threads/ · x/ · captions/</dd></div>
+            <div><dt>Writes</dt><dd>scheduled posts + workflow-status.md</dd></div>
+          </dl>
+          <div class="gate">Blotato infographics ≠ Nano Banana creatives. Stat cards and framework diagrams here; brand photography upstream. The skill says so explicitly, which is the right call.</div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="num">07</div>
+        <div>
+          <div class="cmd">/social-performance-review</div>
+          <span class="role">Analyst · end of month</span>
+          <p class="body">Degrades gracefully across three data qualities: a full CSV export gives per-post scoring, screenshots give pattern analysis with stated gaps, and "the client just told me what worked" still produces a qualitative review. Compares planned versus actual, benchmarks against a bundled reference table, and warns that Reels reach is inflated by non-follower distribution so format comparisons don't mislead.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>CSV / screenshots / prior review · content-calendar.md</dd></div>
+            <div><dt>Writes</dt><dd>outputs/reviews/ · context/best-performers.md</dd></div>
+            <div><dt>Hands to</dt><dd>next month's /content-calendar</dd></div>
+          </dl>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head col">
+      <span class="eyebrow pink">Review</span>
+      <h2>What's missing</h2>
+      <p>Seventeen gaps, in the order I'd fix them. Tier 1 is the one that matters most: the system plans for content formats it has no way to produce. Everything in pink is not built.</p>
+    </div>
+
+    <div class="note">
+      <h4>First, what's worth keeping</h4>
+      <p>The typed-field handoff, the hard-stop in <code>/publisher</code> Phase 0, the three data-quality tiers in the review skill, and the "never AI-approximate a real product" rule are all genuinely good design. Carry all four into v2 unchanged — they're the parts that make this feel like an operating system rather than a prompt collection.</p>
+    </div>
+
+    <div class="tier">
+      <div class="tier-head">
+        <h3>Tier 1 — Formats the system plans but cannot make</h3>
+        <span class="count">4 gaps · fix first</span>
+      </div>
+      <div class="gaps">
+
+        <article class="gap">
+          <div class="gap-top"><h4>Carousels</h4><span class="tape">Not built</span></div>
+          <p>The single biggest hole, and you already spotted it. The calendar allocates 25–30% of every month to carousels and calls them the highest-save format. The benchmarks file tracks carousel saves. The review skill is scripted to recommend <em>"increase carousel posts from 2 to 4 per month"</em>. And nothing in the repo can produce one — <code>/social-creative-designer</code> mentions "carousel panel" once, as an aspect-ratio option, with no multi-panel logic behind it.</p>
+          <p class="evidence"><b>Evidence:</b> content-calendar/SKILL.md:151, :245 · references/content-mix-guide.md:101 · social-performance-review/SKILL.md:225 · social-creative-designer/SKILL.md:57</p>
+          <p class="fix">A dedicated <code>/carousel-designer</code> — spec below.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>Reels and short video</h4><span class="tape">Partial</span></div>
+          <p>The calendar allocates 20–25% to reels. The only thing that exists is Stop-Motion mode: a six-frame product pour, looped. That's one narrow creative, not a video capability. Nothing writes a hook, a script, a shot list, on-screen text, or a b-roll brief — and nothing handles the far more common case where the client films on a phone and needs the words, not the footage.</p>
+          <p class="evidence"><b>Evidence:</b> content-calendar/SKILL.md:152 · social-creative-designer/SKILL.md:198</p>
+          <p class="fix">Split it: <code>/reel-scripter</code> for hook + script + on-screen text + shot list, keep stop-motion as a mode of the designer.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>TikTok has no specialist</h4><span class="tape">Asymmetric</span></div>
+          <p>TikTok is listed as a supported platform in three skills' frontmatter, and <code>/caption-writer</code> carries TikTok formatting rules. But LinkedIn, Threads and X each got a dedicated writer on the grounds that adapted captions underperform — and that argument applies to TikTok at least as strongly.</p>
+          <p class="evidence"><b>Evidence:</b> caption-writer/SKILL.md:177 · content-calendar/SKILL.md:73</p>
+          <p class="fix">Either add <code>/tiktok-writer</code> or drop TikTok from the descriptions. The current half-state routes work to the wrong skill.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>Stories</h4><span class="tape">Not built</span></div>
+          <p>Brand onboarding asks the client for their Stories share of the format mix; the calendar then explicitly excludes Stories as "supplementary, not in the main calendar". So the data is collected and never used, and the highest-frequency format most SMBs actually post is unsupported.</p>
+          <p class="evidence"><b>Evidence:</b> brand-onboarding/SKILL.md:117 · content-calendar/SKILL.md:153</p>
+          <p class="fix">A lightweight weekly Stories sequence generator, or an honest line in the README saying Stories are out of scope.</p>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="spec">
+      <span class="eyebrow pink">Proposed skill</span>
+      <h3>/carousel-designer</h3>
+      <p style="color: var(--ink-soft); font-size: 0.95rem; margin-top: 0.6rem;">The hard part of a carousel isn't generating images — it's that eight panels must look like one designed object. Image models drift between calls. You have already solved this exact problem once, in Stop-Motion mode's scene-anchor protocol: define the frame in panel 1 and copy it <em>verbatim</em> into every later prompt. Reuse that discipline for layout instead of scene.</p>
+      <ol>
+        <li><strong>Read the slot.</strong> Pull the topic, angle and Visual Direction straight from the calendar entry — the carousel brief already exists there.</li>
+        <li><strong>Plan the panel arc before generating anything.</strong> Hook → promise → 3–7 body beats → proof → CTA. Confirm the arc with the operator, exactly as Stop-Motion confirms its six-frame arc.</li>
+        <li><strong>Lock a design system.</strong> One paragraph — grid, margin, type scale, palette, panel-number position — pasted verbatim into every panel prompt. This is the whole trick.</li>
+        <li><strong>Enforce safe zones.</strong> 1080×1350 (4:5), and keep type clear of the crop Instagram applies in-feed and of the swipe indicator.</li>
+        <li><strong>Text is the failure mode.</strong> Nano Banana garbles small text — the designer skill already warns about this for labels. Offer a text-free panel set the operator can typeset in Canva, and treat that as a first-class output, not a fallback.</li>
+        <li><strong>Hand off both ways.</strong> Write panels to <code>outputs/carousels/</code> and a matching caption stub back to <code>/caption-writer</code>, so the caption's first line and panel 1's hook are the same promise.</li>
+      </ol>
+    </div>
+
+    <div class="tier">
+      <div class="tier-head">
+        <h3>Tier 2 — Jobs a social team does that this doesn't</h3>
+        <span class="count">4 gaps</span>
+      </div>
+      <div class="gaps">
+
+        <article class="gap">
+          <div class="gap-top"><h4>Engagement and community management</h4><span class="tape">Absent</span></div>
+          <p>Roughly half of what an agency bills for social is replying — comments, DMs, inbound enquiries, review responses. There is no skill for any of it. The repo calls itself a complete social media team; right now it's a complete content <em>production</em> team.</p>
+          <p class="fix">A <code>/community-manager</code> that reads brand voice and drafts replies in tiers: routine, needs-a-human, escalate.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>Nothing repurposes</h4><span class="tape">Structural</span></div>
+          <p>Every platform writer starts from the same calendar entry and writes independently. That's correct for voice, but it means one strong idea is re-derived five times instead of cascading — long-form asset → carousel → reel script → LinkedIn post → three Threads takes. Cascade is where the leverage in this category actually is.</p>
+          <p class="fix">A <code>/repurpose</code> step that takes one source asset and fans it out, with each platform writer as the final pass rather than the first.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>No brand-safety or claims gate</h4><span class="tape">Risk</span></div>
+          <p>Nothing checks health, food, cosmetic or financial claims, and nothing handles paid-partnership disclosure. For SMB clients in regulated categories — and food brands are used as the running example throughout the repo — a generated caption asserting a health benefit is a real liability.</p>
+          <p class="fix">A pre-publish check inside <code>/publisher</code>, plus a claims section in <code>brand-style.md</code>.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>The analytics loop is manual for no reason</h4><span class="tape">Free win</span></div>
+          <p>The review skill walks the client through exporting a CSV from Meta Business Suite by hand. Meanwhile Blotato — already a dependency for publishing — exposes post analytics and top-post listing. If a month was scheduled through <code>/publisher</code>, its numbers can be read back automatically.</p>
+          <p class="fix">Have the review skill try Blotato analytics first and fall back to CSV. Keep the manual path for clients who never used the publisher.</p>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="tier">
+      <div class="tier-head">
+        <h3>Tier 3 — Packaging and mechanics</h3>
+        <span class="count">9 gaps · these are what bite in month two</span>
+      </div>
+      <div class="gaps">
+
+        <article class="gap">
+          <div class="gap-top"><h4>Install has no update path</h4><span class="tape">Fix in v2</span></div>
+          <p><code>install.sh</code> copies ten folders into <code>~/.claude/skills/</code>. There's no update command, no uninstall, no version check, and the skill list is hardcoded <em>twice</em> — once in the shell script and once in the batch file. Add a skill in v2 and you will forget one of them. A user who installed last month has no way to know they're stale.</p>
+          <p class="fix">Ship it as a Claude Code plugin with a <code>.claude-plugin/marketplace.json</code>. Users install once and <code>git pull</code> updates everything, and project-scoped installs start working.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>Seven of ten skills load everything, every time</h4><span class="tape">Context cost</span></div>
+          <p>3,330 lines of instruction, and only <code>caption-writer</code>, <code>content-calendar</code> and <code>social-performance-review</code> use <code>references/</code>. <code>/social-creative-designer</code> is 420 lines, and a Brand-mode session — a single text overlay on a real photo — still loads all four modes' prompt templates.</p>
+          <p class="fix">Keep procedure and routing in <code>SKILL.md</code>; move prompt templates, platform formatting tables and framework libraries into <code>references/</code>. Target under 150 lines per skill.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>No <code>scripts/</code> directory</h4><span class="tape">Determinism</span></div>
+          <p>The frames-to-MP4 export is a Python block pasted inside a markdown file for the model to retype each run. Deterministic work belongs in a file that gets executed, not regenerated — retyped code is a new chance to get it wrong every session.</p>
+          <p class="fix"><code>scripts/frames_to_mp4.py</code> with arguments, invoked by the skill. Same for any future export or resize step.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>MCP tool names won't resolve as written</h4><span class="tape">Breaks silently</span></div>
+          <p>Every Blotato call is namespaced <code>mcp__claude_ai_Blotato__*</code> — a claude.ai connector prefix. A user who adds Blotato as a local MCP server, which is what SETUP.md tells them to do, gets a different prefix and every call misses. Separately, <code>mcp__nanobanana__generate_image</code> is asserted throughout with no server that ships it, and SETUP.md points readers at "the link shared alongside this repo".</p>
+          <p class="evidence"><b>Evidence:</b> publisher/SKILL.md — 14 hardcoded tool names · SETUP.md, MCP 2</p>
+          <p class="fix">Ship a <code>.mcp.json</code>, name the real Nano Banana server, and have Phase 0 probe for the capability rather than assume one prefix.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>A skill description contradicts the orchestrator</h4><span class="tape">Mis-routes</span></div>
+          <p><code>/caption-writer</code>'s frontmatter advertises "Instagram, LinkedIn, Facebook, TikTok, and X". The orchestrator says, twice and in bold, never to use it for LinkedIn or X. The description is the part the model routes on, so the description wins — and the wrong skill fires.</p>
+          <p class="evidence"><b>Evidence:</b> caption-writer/SKILL.md:4 vs social-media-manager/SKILL.md — Notes for Operators</p>
+          <p class="fix">Narrow the description to Instagram and Facebook. Audit all ten descriptions for overlap — they are the routing table.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>No worked example anyone can look at</h4><span class="tape">Adoption</span></div>
+          <p>There is no filled-in <code>brand-style.md</code>, no sample calendar, no example caption set, no creative in the repo — and <code>.gitignore</code> excludes <code>context/</code>, <code>outputs/</code> and <code>assets/</code>, so nothing demonstrable <em>can</em> ship. A reader has to install the whole thing and onboard a client before seeing a single output.</p>
+          <p class="fix">An <code>examples/demo-client/</code> with a real brand guide, a real month, five captions and one creative brief. For a public repo this converts better than any amount of README.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>No LICENSE file</h4><span class="tape">Housekeeping</span></div>
+          <p>The README has a License heading and the words "use it, adapt it, build on it" — with no licence file, that's legally ambiguous for anyone doing client work with it. The same line is also missing its punctuation: <em>"Created by the AI Impact use it"</em>.</p>
+          <p class="fix">Add MIT. Fix the sentence. Add a <code>CLAUDE.md</code> so contributors get the house conventions.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>No way to tell if a change made output worse</h4><span class="tape">Regression risk</span></div>
+          <p>Editing a 400-line skill is editing a prompt. There is no test, no fixture, no eval — so an improvement to one phase can quietly degrade another, and nobody finds out until a client sees it.</p>
+          <p class="fix">A small eval suite per skill, even five fixtures each. <code>skill-creator</code> supports this directly.</p>
+        </article>
+
+        <article class="gap">
+          <div class="gap-top"><h4>The resume file has four writers and no schema</h4><span class="tape">Drift</span></div>
+          <p><code>workflow-status.md</code> is the only durable state and the first thing read on every session. Four skills append to it in prose, and the orchestrator already contains repair logic for files missing the newer fields — which is the tell that the format is drifting.</p>
+          <p class="fix">Define the schema once, in one place, and have every skill write through it.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head col">
+      <span class="eyebrow pink">v2</span>
+      <h2>Where the new skills slot in</h2>
+      <p>The three-layer shape holds. Tier 1 and 2 add five skills, and one of them — repurpose — changes the direction content flows for the first time.</p>
+    </div>
+
+    <figure>
+      <div class="fig-frame">
+        <svg viewBox="0 0 1040 470" role="img" aria-label="Proposed v2 map: existing layers keep their skills, with carousel-designer, reel-scripter and tiktok-writer added to content creation, repurpose added as a new cascade step before them, and community-manager added to the distribution layer.">
+          <defs>
+            <marker id="ah4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"></path>
+            </marker>
+            <marker id="ah4p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--pink)"></path>
+            </marker>
+          </defs>
+
+          <rect class="d-band" x="18" y="34" width="200" height="320"></rect>
+          <rect class="d-band" x="252" y="34" width="176" height="320"></rect>
+          <rect class="d-band" x="462" y="34" width="252" height="320"></rect>
+          <rect class="d-band" x="748" y="34" width="230" height="320"></rect>
+
+          <text class="d-eye" x="18" y="24">FOUNDATION</text>
+          <text class="d-eye-p" x="252" y="24">NEW · CASCADE</text>
+          <text class="d-eye" x="462" y="24">CONTENT CREATION</text>
+          <text class="d-eye" x="748" y="24">DISTRIBUTION</text>
+
+          <rect class="d-box" x="32" y="120" width="172" height="40"></rect>
+          <text class="d-t" x="44" y="145">/brand-onboarding</text>
+          <rect class="d-box" x="32" y="176" width="172" height="40"></rect>
+          <text class="d-t" x="44" y="201">/content-calendar</text>
+          <path class="d-arr" d="M 118 160 L 118 174" marker-end="url(#ah4)"></path>
+
+          <rect class="d-box-p" x="264" y="148" width="152" height="56"></rect>
+          <text class="d-t-p" x="276" y="172">/repurpose</text>
+          <text class="d-t-s" x="276" y="190">1 asset → n formats</text>
+          <path class="d-arr" d="M 204 196 L 262 190" marker-end="url(#ah4)"></path>
+
+          <rect class="d-box" x="476" y="52" width="224" height="34"></rect>
+          <text class="d-t" x="488" y="74">/caption-writer</text>
+          <rect class="d-box" x="476" y="94" width="224" height="34"></rect>
+          <text class="d-t" x="488" y="116">/social-creative-designer</text>
+          <rect class="d-box-p" x="476" y="136" width="224" height="34"></rect>
+          <text class="d-t-p" x="488" y="158">/carousel-designer</text>
+          <rect class="d-box-p" x="476" y="178" width="224" height="34"></rect>
+          <text class="d-t-p" x="488" y="200">/reel-scripter</text>
+          <rect class="d-box" x="476" y="220" width="224" height="34"></rect>
+          <text class="d-t" x="488" y="242">/linkedin-writer</text>
+          <rect class="d-box" x="476" y="262" width="224" height="34"></rect>
+          <text class="d-t" x="488" y="284">/threads-writer · /x-writer</text>
+          <rect class="d-box-p" x="476" y="304" width="224" height="34"></rect>
+          <text class="d-t-p" x="488" y="326">/tiktok-writer</text>
+
+          <path class="d-arr-d" d="M 416 176 L 446 176 L 446 69 L 474 69" marker-end="url(#ah4)" stroke="var(--pink)"></path>
+          <path class="d-arr-d" d="M 446 176 L 446 153 L 474 153" marker-end="url(#ah4)" stroke="var(--pink)"></path>
+          <path class="d-arr-d" d="M 446 176 L 446 195 L 474 195" marker-end="url(#ah4)" stroke="var(--pink)"></path>
+          <path class="d-arr-d" d="M 446 176 L 446 321 L 474 321" marker-end="url(#ah4)" stroke="var(--pink)"></path>
+
+          <rect class="d-box" x="762" y="94" width="202" height="40"></rect>
+          <text class="d-t" x="774" y="119">/publisher</text>
+          <rect class="d-box-p" x="762" y="150" width="202" height="40"></rect>
+          <text class="d-t-p" x="774" y="169">+ claims check</text>
+          <text class="d-t-s" x="774" y="184">pre-publish gate</text>
+          <rect class="d-box-p" x="762" y="206" width="202" height="40"></rect>
+          <text class="d-t-p" x="774" y="231">/community-manager</text>
+          <rect class="d-box" x="762" y="262" width="202" height="40"></rect>
+          <text class="d-t" x="774" y="281">/social-performance-</text>
+          <text class="d-t" x="774" y="295">review</text>
+
+          <path class="d-arr" d="M 700 240 L 730 240 L 730 114 L 760 114" marker-end="url(#ah4)"></path>
+          <path class="d-arr" d="M 964 114 L 990 114 L 990 170 L 966 170" marker-end="url(#ah4)"></path>
+          <path class="d-arr-d" d="M 863 302 L 863 340" marker-end="url(#ah4p)" stroke="var(--pink)"></path>
+          <text class="d-lab" x="748" y="360">Blotato analytics read back — no manual CSV</text>
+
+          <path class="d-arr-d" d="M 964 282 L 1010 282 L 1010 430 L 118 430 L 118 218" marker-end="url(#ah4)" stroke="var(--blue)"></path>
+          <text class="d-lab-b" x="420" y="422">best-performers.md → next month</text>
+        </svg>
+      </div>
+      <figcaption>Pink is new. Four of the five additions sit inside the existing layers and need no architectural change — but <code>/repurpose</code> is a genuinely new stage: it turns the platform writers from five parallel first drafts into five final passes over one idea.</figcaption>
+    </figure>
+
+    <div class="col">
+      <h3>If you only do three things</h3>
+      <ul class="tight">
+        <li><strong>Build <code>/carousel-designer</code>.</strong> It's the format the system already promises, already measures, and already recommends more of.</li>
+        <li><strong>Repackage as a plugin.</strong> Everything else in v2 gets easier once there's an update path, and everyone still on v1 gets the new skills automatically.</li>
+        <li><strong>Ship a demo client folder.</strong> The fastest way to make a stranger understand what this repo does is to let them read one month of its output.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    Teardown of <a href="https://github.com/stevenflanagan1/social-ai-team">stevenflanagan1/social-ai-team</a> @ main · 10 skills, 3,330 lines reviewed<br>
+    Built by the AI Impact · <a href="https://theaiimpact.co/">theaiimpact.co</a>
+  </footer>
+
+</div>
