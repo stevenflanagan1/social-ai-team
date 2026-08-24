@@ -173,7 +173,7 @@ Some skills use MCP tools for enhanced functionality. Skills work in **baseline 
 | **Blotato** | `/publisher` | Post scheduling + infographic generation (optional — only needed for publishing) |
 | **Firecrawl** | `/content-calendar`, `/caption-writer`, `/social-performance-review`, `/linkedin-writer`, `/x-writer` | Competitor content research (optional) |
 | **SerpApi** | `/content-calendar`, `/caption-writer` | Trend research (optional) |
-| **Tasty Content** | `/x-writer` | X/Twitter trend research (optional) |
+| **X API** | `/x-writer` | X/Twitter trend research (optional) |
 
 Playwright and Nano Banana are the two you need for the core workflow. Blotato is optional — all content creation skills work without it. You only need Blotato if you want to schedule posts directly from Claude Code. Firecrawl, SerpApi, and Tasty Content are optional enhancements.
 
