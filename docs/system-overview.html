@@ -1,0 +1,791 @@
+<title>The Social AI Team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+
+<style>
+  :root {
+    --paper:      #E9ECF0;
+    --surface:    #FFFFFF;
+    --surface-2:  #F3F5F8;
+    --ink:        #12181F;
+    --ink-soft:   #59636F;
+    --ink-faint:  #8A939E;
+    --rule:       #C9D0D9;
+    --blue:       #0B5FBF;
+    --blue-wash:  #E2ECFA;
+    --pink:       #C9146F;
+    --pink-wash:  #FBE4F0;
+
+    --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --f-body:    "Source Serif 4", Georgia, "Times New Roman", serif;
+    --f-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --measure: 68ch;
+    --pad: clamp(1.15rem, 4vw, 3rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:     #0D1219;
+      --surface:   #161C25;
+      --surface-2: #1D242E;
+      --ink:       #E6EBF1;
+      --ink-soft:  #9AA6B4;
+      --ink-faint: #6C7885;
+      --rule:      #2C3542;
+      --blue:      #6BAAF5;
+      --blue-wash: #16283F;
+      --pink:      #FF6FB4;
+      --pink-wash: #34142A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:     #0D1219;
+    --surface:   #161C25;
+    --surface-2: #1D242E;
+    --ink:       #E6EBF1;
+    --ink-soft:  #9AA6B4;
+    --ink-faint: #6C7885;
+    --rule:      #2C3542;
+    --blue:      #6BAAF5;
+    --blue-wash: #16283F;
+    --pink:      #FF6FB4;
+    --pink-wash: #34142A;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 var(--pad); }
+  .col  { max-width: var(--measure); }
+
+  h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+  h1 { font-size: clamp(2.4rem, 6.5vw, 4.1rem); font-weight: 800; letter-spacing: -0.028em; }
+  h2 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 700; letter-spacing: -0.02em; }
+  h3 { font-size: 1.16rem; font-weight: 700; letter-spacing: -0.008em; }
+  h4 { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+  p  { margin: 0 0 1em; }
+  a  { color: var(--blue); text-underline-offset: 3px; }
+  a:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 2px; }
+
+  .eyebrow {
+    font-family: var(--f-display); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.17em; text-transform: uppercase; color: var(--blue);
+    display: block; margin-bottom: 0.9rem;
+  }
+  .eyebrow.pink { color: var(--pink); }
+  code, .mono { font-family: var(--f-mono); font-size: 0.855em; }
+  code { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 3px; padding: 0.1em 0.36em; }
+  .lede { font-size: clamp(1.08rem, 2.1vw, 1.3rem); line-height: 1.5; color: var(--ink-soft); }
+
+  header.masthead { padding: clamp(3rem, 8vw, 5.5rem) 0 0; }
+  .stamp {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-soft);
+    border: 1px solid var(--rule); border-radius: 100px;
+    padding: 0.34rem 0.8rem; margin-bottom: 1.5rem;
+  }
+  .stamp b { color: var(--blue); font-weight: 600; }
+  .headline-rule { height: 3px; background: var(--ink); width: 100%; margin: 2.4rem 0 0; }
+
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(122px, 1fr)); border-bottom: 1px solid var(--rule); }
+  .fact { padding: 1.1rem 1.2rem 1.2rem 0; }
+  .fact .n { font-family: var(--f-display); font-weight: 800; font-size: 1.9rem; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; display: block; line-height: 1; }
+  .fact .l { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-soft); margin-top: 0.45rem; display: block; }
+  .fact.hum .n { color: var(--pink); }
+
+  section { padding: clamp(3.2rem, 7vw, 5.2rem) 0; border-top: 1px solid var(--rule); }
+  section:first-of-type { border-top: 0; }
+  .sec-head { margin-bottom: 2.2rem; }
+  .sec-head p { margin-top: 0.9rem; }
+
+  /* legend */
+  .legend { display: flex; gap: 1.6rem; flex-wrap: wrap; font-family: var(--f-mono); font-size: 0.73rem; color: var(--ink-soft); margin: 0 0 1.4rem; }
+  .legend span { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .swatch { width: 26px; height: 0; border-top: 2px solid var(--blue); display: inline-block; }
+  .swatch.p { border-top: 2px dashed var(--pink); }
+
+  figure { margin: 2.2rem 0; }
+  .fig-frame { background: var(--surface); border: 1px solid var(--rule); padding: clamp(0.9rem, 2.5vw, 1.7rem); overflow-x: auto; }
+  figure svg { display: block; width: 100%; height: auto; min-width: 660px; color: var(--ink); }
+  figcaption { font-family: var(--f-mono); font-size: 0.74rem; line-height: 1.55; color: var(--ink-soft); margin-top: 0.85rem; max-width: 64ch; }
+
+  .d-box    { fill: var(--surface-2); stroke: currentColor; stroke-width: 1.4; }
+  .d-box-b  { fill: var(--blue-wash); stroke: var(--blue); stroke-width: 1.4; }
+  .d-box-p  { fill: var(--pink-wash); stroke: var(--pink); stroke-width: 1.4; }
+  .d-band   { fill: none; stroke: var(--rule); stroke-width: 1; stroke-dasharray: 3 4; }
+  .d-t      { fill: currentColor; font-family: var(--f-mono); font-size: 12px; }
+  .d-t-s    { fill: var(--ink-soft); font-family: var(--f-mono); font-size: 10.5px; }
+  .d-t-p    { fill: var(--pink); font-family: var(--f-mono); font-size: 11.5px; }
+  .d-t-b    { fill: var(--blue); font-family: var(--f-mono); font-size: 12px; }
+  .d-eye    { fill: var(--blue); font-family: var(--f-display); font-size: 10px; font-weight: 700; letter-spacing: 0.13em; }
+  .d-eye-p  { fill: var(--pink); font-family: var(--f-display); font-size: 10px; font-weight: 700; letter-spacing: 0.13em; }
+  .d-eye-n  { fill: var(--ink-faint); font-family: var(--f-display); font-size: 10px; font-weight: 700; letter-spacing: 0.13em; }
+  .d-arr    { stroke: currentColor; stroke-width: 1.4; fill: none; }
+  .d-arr-b  { stroke: var(--blue); stroke-width: 1.4; fill: none; }
+  .d-arr-bd { stroke: var(--blue); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+  .d-gate   { stroke: var(--pink); stroke-width: 1.6; fill: none; stroke-dasharray: 4 4; }
+  .d-lab    { fill: var(--ink-soft); font-family: var(--f-mono); font-size: 10px; }
+  .d-lab-b  { fill: var(--blue); font-family: var(--f-mono); font-size: 10px; }
+  .d-lab-p  { fill: var(--pink); font-family: var(--f-mono); font-size: 10px; }
+
+  /* file tree */
+  .tree { background: var(--surface); border: 1px solid var(--rule); padding: clamp(1.1rem, 2.8vw, 1.8rem); font-family: var(--f-mono); font-size: 0.79rem; line-height: 1.95; overflow-x: auto; margin: 2rem 0; }
+  .tree .dir { color: var(--ink); font-weight: 600; }
+  .tree .cmt { color: var(--ink-faint); }
+  .tree .w { color: var(--blue); }
+  .tree .you { color: var(--pink); }
+
+  /* matrix */
+  .matrix { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.86rem; }
+  .matrix th { text-align: left; font-family: var(--f-display); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; color: var(--ink-faint); padding: 0 0.9rem 0.6rem 0; border-bottom: 2px solid var(--ink); vertical-align: bottom; }
+  .matrix td { padding: 0.85rem 0.9rem 0.85rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .matrix td.f { font-family: var(--f-mono); font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+  .matrix td.w { font-family: var(--f-mono); font-size: 0.75rem; color: var(--blue); white-space: nowrap; }
+  .matrix td.r { font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-soft); line-height: 1.7; }
+  .matrix td.d { color: var(--ink-soft); font-size: 0.85rem; }
+  .matrix-scroll { overflow-x: auto; }
+
+  /* skills */
+  .group { margin-top: 2.6rem; }
+  .group-head { display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap; border-bottom: 2px solid var(--ink); padding-bottom: 0.6rem; margin-bottom: 0; }
+  .group-head h3 { font-size: 1.25rem; }
+  .group-head .when { font-family: var(--f-mono); font-size: 0.72rem; color: var(--ink-soft); margin-left: auto; }
+  .cards { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-top: 0; }
+  .card { background: var(--surface); padding: clamp(1.05rem, 2.5vw, 1.5rem); }
+  .card .cmd { font-family: var(--f-mono); font-size: 0.97rem; font-weight: 600; letter-spacing: -0.01em; }
+  .card .role { font-family: var(--f-display); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; color: var(--ink-faint); display: block; margin-top: 0.32rem; }
+  .card .body { font-size: 0.94rem; margin: 0.8rem 0 0; color: var(--ink-soft); max-width: 62ch; }
+  .card .body strong { color: var(--ink); font-weight: 600; }
+  .io { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.65rem 1.4rem; margin-top: 1rem; padding-top: 0.95rem; border-top: 1px dashed var(--rule); }
+  .io dt { font-family: var(--f-display); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; color: var(--ink-faint); }
+  .io dd { margin: 0.28rem 0 0; font-family: var(--f-mono); font-size: 0.755rem; line-height: 1.55; color: var(--ink); word-break: break-word; }
+  .io dd.b { color: var(--blue); }
+  .gate-note { margin-top: 0.95rem; font-family: var(--f-mono); font-size: 0.72rem; color: var(--pink); border-left: 2px solid var(--pink); padding-left: 0.7rem; }
+
+  /* month timeline */
+  .month { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 2rem; }
+  .wk { background: var(--surface); display: grid; grid-template-columns: 8.5rem 1fr; gap: 0 1.4rem; padding: clamp(1rem, 2.4vw, 1.4rem); }
+  .wk .when { font-family: var(--f-display); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; color: var(--blue); padding-top: 0.18rem; }
+  .wk .what { font-size: 0.94rem; color: var(--ink-soft); max-width: 62ch; }
+  .wk .what strong { color: var(--ink); font-weight: 600; }
+  .wk .what .mono { color: var(--ink); }
+
+  .note { background: var(--blue-wash); border: 1px solid var(--blue); padding: clamp(1rem, 2.6vw, 1.5rem); margin: 2rem 0; }
+  .note h4 { color: var(--blue); margin-bottom: 0.55rem; }
+  .note p { font-size: 0.95rem; margin: 0; }
+  .note p + p { margin-top: 0.7rem; }
+  .note.human { background: var(--pink-wash); border-color: var(--pink); }
+  .note.human h4 { color: var(--pink); }
+
+  .tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(232px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 2rem; }
+  .tool { background: var(--surface); padding: 1.15rem; }
+  .tool .n { font-family: var(--f-mono); font-size: 0.85rem; font-weight: 600; }
+  .tool .u { font-family: var(--f-display); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); display: block; margin-top: 0.3rem; }
+  .tool p { font-size: 0.87rem; color: var(--ink-soft); margin: 0.6rem 0 0; }
+
+  ul.tight { padding-left: 1.15rem; margin: 0.8rem 0 0; }
+  ul.tight li { margin-bottom: 0.5rem; font-size: 0.96rem; color: var(--ink-soft); }
+  ul.tight li strong { color: var(--ink); font-weight: 600; }
+
+  footer { border-top: 3px solid var(--ink); padding: 2.4rem 0 4rem; font-family: var(--f-mono); font-size: 0.76rem; color: var(--ink-soft); }
+  footer a { color: var(--blue); }
+
+  @media (max-width: 640px) {
+    .wk { grid-template-columns: 1fr; }
+    .wk .when { margin-bottom: 0.4rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <span class="stamp">System overview <b>·</b> Social AI Team <b>·</b> The AI Impact</span>
+    <h1>A full social media team,<br>running inside one folder.</h1>
+    <div class="headline-rule"></div>
+  </header>
+
+  <section>
+    <div class="col">
+      <p class="lede">Fifteen specialists — a brand strategist, a copywriter, an art director, four platform writers, a scheduler, an analyst — each one a set of instructions Claude reads and becomes. They don't message each other. They read and write files in the client's folder, and that folder is the agency's memory. Set a client up once, and every skill after that already knows their voice, their colours, their audience, and what worked last month.</p>
+    </div>
+
+    <div class="facts" style="margin-top: 2.6rem;">
+      <div class="fact"><span class="n">15</span><span class="l">Specialists</span></div>
+      <div class="fact"><span class="n">5</span><span class="l">Platforms</span></div>
+      <div class="fact"><span class="n">1</span><span class="l">Folder per client</span></div>
+      <div class="fact"><span class="n">4</span><span class="l">Stages, start to finish</span></div>
+      <div class="fact hum"><span class="n">5</span><span class="l">Points you sign off</span></div>
+    </div>
+
+    <div class="legend" style="margin-top: 2.4rem;">
+      <span><i class="swatch"></i> A file handed from one skill to the next</span>
+      <span><i class="swatch p"></i> A point where you review and approve</span>
+    </div>
+
+    <figure style="margin-top: 0.6rem;">
+      <div class="fig-frame">
+        <svg viewBox="0 0 1040 400" role="img" aria-label="The four stages: set up the brand once, plan the month, make the content in words, images and video, then ship and learn. A human approval gate sits between every stage, and last month's results feed back into next month's plan.">
+          <defs>
+            <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--blue)"></path>
+            </marker>
+          </defs>
+
+          <text class="d-eye-n" x="24" y="22">STAGE 1 · ONCE</text>
+          <text class="d-eye-n" x="248" y="22">STAGE 2 · MONTHLY</text>
+          <text class="d-eye-n" x="470" y="22">STAGE 3 · WEEKLY</text>
+          <text class="d-eye-n" x="784" y="22">STAGE 4 · CONTINUOUS</text>
+
+          <rect class="d-box-b" x="24" y="150" width="182" height="60"></rect>
+          <text class="d-t" x="38" y="176">Set up the brand</text>
+          <text class="d-t-s" x="38" y="194">/brand-onboarding</text>
+
+          <line class="d-gate" x1="226" y1="46" x2="226" y2="330"></line>
+          <text class="d-lab-p" x="200" y="352">you approve</text>
+
+          <rect class="d-box-b" x="248" y="150" width="182" height="60"></rect>
+          <text class="d-t" x="262" y="176">Plan the month</text>
+          <text class="d-t-s" x="262" y="194">/content-calendar</text>
+
+          <line class="d-gate" x1="450" y1="46" x2="450" y2="330"></line>
+          <text class="d-lab-p" x="424" y="352">you approve</text>
+
+          <rect class="d-box-b" x="470" y="150" width="126" height="60"></rect>
+          <text class="d-t" x="482" y="176">Cascade</text>
+          <text class="d-t-s" x="482" y="194">/repurpose</text>
+
+          <rect class="d-box" x="616" y="60" width="146" height="52"></rect>
+          <text class="d-t" x="628" y="82">Words</text>
+          <text class="d-t-s" x="628" y="99">5 platform writers</text>
+
+          <rect class="d-box" x="616" y="154" width="146" height="52"></rect>
+          <text class="d-t" x="628" y="176">Images</text>
+          <text class="d-t-s" x="628" y="193">posts + carousels</text>
+
+          <rect class="d-box" x="616" y="248" width="146" height="52"></rect>
+          <text class="d-t" x="628" y="270">Video</text>
+          <text class="d-t-s" x="628" y="287">reels + stop-motion</text>
+
+          <path class="d-arr-b" d="M 596 180 L 606 180 L 606 86 L 614 86" marker-end="url(#a1)"></path>
+          <path class="d-arr-b" d="M 596 180 L 614 180" marker-end="url(#a1)"></path>
+          <path class="d-arr-b" d="M 606 180 L 606 274 L 614 274" marker-end="url(#a1)"></path>
+
+          <line class="d-gate" x1="782" y1="46" x2="782" y2="330"></line>
+          <text class="d-lab-p" x="756" y="352">you approve</text>
+
+          <rect class="d-box-b" x="804" y="60" width="196" height="52"></rect>
+          <text class="d-t" x="816" y="82">Schedule + post</text>
+          <text class="d-t-s" x="816" y="99">/publisher</text>
+
+          <rect class="d-box-b" x="804" y="154" width="196" height="52"></rect>
+          <text class="d-t" x="816" y="176">Reply to everyone</text>
+          <text class="d-t-s" x="816" y="193">/community-manager</text>
+
+          <rect class="d-box-b" x="804" y="248" width="196" height="52"></rect>
+          <text class="d-t" x="816" y="270">Measure the month</text>
+          <text class="d-t-s" x="816" y="287">/social-performance-review</text>
+
+          <path class="d-arr-b" d="M 762 86 L 792 86 L 792 86 L 802 86" marker-end="url(#a1)"></path>
+          <path class="d-arr-b" d="M 762 180 L 802 180" marker-end="url(#a1)"></path>
+          <path class="d-arr-b" d="M 762 274 L 792 274 L 792 180" ></path>
+
+          <path class="d-arr-b" d="M 206 180 L 246 180" marker-end="url(#a1)"></path>
+          <path class="d-arr-b" d="M 430 180 L 468 180" marker-end="url(#a1)"></path>
+
+          <path class="d-arr-bd" d="M 1000 288 L 1022 288 L 1022 380 L 339 380 L 339 212" marker-end="url(#a1)"></path>
+          <text class="d-lab-b" x="512" y="374">what performed → re-weights next month's plan</text>
+        </svg>
+      </div>
+      <figcaption>Four stages. Nothing crosses a pink line without a person looking at it first — a calendar nobody checked would otherwise produce a month of the wrong content. The only loop runs from the month's results back into the next month's plan, so the system gets more accurate the longer it runs on one client.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head col">
+      <span class="eyebrow">The core idea</span>
+      <h2>The folder is the agency</h2>
+      <p>This is the part worth understanding first, because everything else follows from it.</p>
+    </div>
+
+    <div class="col">
+      <p>Every client gets a folder. Inside it, <code>context/</code> holds what the team knows about that client, <code>assets/</code> holds their real photos, and <code>outputs/</code> holds the finished work. You open Claude in that folder and type a skill name.</p>
+      <p>No skill talks to another skill directly. Each one <strong>reads the context files it needs, does its job, and writes its result back as a file</strong>. That single rule is what makes the system reliable: any step can be re-run on its own, a session that ends mid-month loses nothing, and opening a different client folder gives you a team with a completely different brand in its head.</p>
+    </div>
+
+    <div class="tree">
+      <span class="dir">cafe-rio/</span>            <span class="cmt">← one folder per client</span><br>
+      │<br>
+      ├── <span class="dir">context/</span>         <span class="cmt">← what the team knows</span><br>
+      │   ├── brand-style.md        <span class="w">written by /brand-onboarding</span><br>
+      │   ├── content-calendar.md   <span class="w">written by /content-calendar</span><br>
+      │   ├── best-performers.md    <span class="w">written by /social-performance-review</span><br>
+      │   ├── upcoming-events.md    <span class="you">you write this — launches, promos</span><br>
+      │   └── workflow-status.md    <span class="w">written by /social-media-manager</span><br>
+      │<br>
+      ├── <span class="dir">assets/</span>          <span class="cmt">← the client's real photos</span><br>
+      │   ├── products/             <span class="you">high-res product shots</span><br>
+      │   └── lifestyle/            <span class="you">people, events, behind the scenes</span><br>
+      │<br>
+      └── <span class="dir">outputs/</span>         <span class="cmt">← the finished work</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;├── captions/  ├── carousels/  ├── creatives/<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;├── reels/     ├── linkedin/   ├── threads/<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;├── x/         ├── tiktok/     └── reviews/
+    </div>
+
+    <div class="note">
+      <h4>Why one folder per client matters</h4>
+      <p>Brand guides, calendars and voice never bleed between clients, because they physically can't — they live in separate directories. Switching client is switching folder. And because everything is plain markdown, you can open any of it, read it, and edit it yourself without going through Claude at all.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head col">
+      <span class="eyebrow">Where the context comes from</span>
+      <h2>Five files, and who reads them</h2>
+      <p>Each context file has exactly one author and many readers. That's the whole handoff mechanism.</p>
+    </div>
+
+    <figure>
+      <div class="fig-frame">
+        <svg viewBox="0 0 1040 440" role="img" aria-label="A context bus: five skills each write one context file into the client folder, and every content skill reads brand-style, content-calendar and best-performers before producing anything.">
+          <defs>
+            <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--blue)"></path>
+            </marker>
+          </defs>
+
+          <text class="d-eye" x="24" y="20">WHO WRITES IT</text>
+
+          <rect class="d-box" x="24" y="34" width="182" height="52"></rect>
+          <text class="d-t" x="36" y="56">/brand-onboarding</text>
+          <text class="d-t-s" x="36" y="73">once per client</text>
+
+          <rect class="d-box" x="226" y="34" width="182" height="52"></rect>
+          <text class="d-t" x="238" y="56">/content-calendar</text>
+          <text class="d-t-s" x="238" y="73">start of month</text>
+
+          <rect class="d-box" x="428" y="34" width="182" height="52"></rect>
+          <text class="d-t" x="440" y="56">/social-performance-</text>
+          <text class="d-t" x="440" y="71">review</text>
+
+          <rect class="d-box-p" x="630" y="34" width="182" height="52"></rect>
+          <text class="d-t-p" x="642" y="56">you</text>
+          <text class="d-t-s" x="642" y="73">the operator</text>
+
+          <rect class="d-box" x="832" y="34" width="182" height="52"></rect>
+          <text class="d-t" x="844" y="56">/social-media-</text>
+          <text class="d-t" x="844" y="71">manager</text>
+
+          <path class="d-arr-b" d="M 115 86 L 115 154" marker-end="url(#a2)"></path>
+          <path class="d-arr-b" d="M 317 86 L 317 154" marker-end="url(#a2)"></path>
+          <path class="d-arr-b" d="M 519 86 L 519 154" marker-end="url(#a2)"></path>
+          <path class="d-arr-b" d="M 721 86 L 721 154" marker-end="url(#a2)"></path>
+          <path class="d-arr-b" d="M 923 86 L 923 154" marker-end="url(#a2)"></path>
+
+          <rect class="d-band" x="14" y="146" width="1012" height="92"></rect>
+          <text class="d-eye" x="24" y="138">context/ — THE CLIENT FOLDER</text>
+
+          <rect class="d-box-b" x="24" y="164" width="182" height="56"></rect>
+          <text class="d-t-b" x="36" y="187">brand-style.md</text>
+          <text class="d-t-s" x="36" y="204">voice · palette · ICP</text>
+
+          <rect class="d-box-b" x="226" y="164" width="182" height="56"></rect>
+          <text class="d-t-b" x="238" y="187">content-calendar.md</text>
+          <text class="d-t-s" x="238" y="204">~16 briefed slots</text>
+
+          <rect class="d-box-b" x="428" y="164" width="182" height="56"></rect>
+          <text class="d-t-b" x="440" y="187">best-performers.md</text>
+          <text class="d-t-s" x="440" y="204">what actually worked</text>
+
+          <rect class="d-box-b" x="630" y="164" width="182" height="56"></rect>
+          <text class="d-t-b" x="642" y="187">upcoming-events.md</text>
+          <text class="d-t-s" x="642" y="204">launches · promos</text>
+
+          <rect class="d-box-b" x="832" y="164" width="182" height="56"></rect>
+          <text class="d-t-b" x="844" y="187">workflow-status.md</text>
+          <text class="d-t-s" x="844" y="204">where we got to</text>
+
+          <path class="d-arr-b" d="M 115 220 L 115 302" marker-end="url(#a2)"></path>
+          <path class="d-arr-b" d="M 317 220 L 317 302" marker-end="url(#a2)"></path>
+          <path class="d-arr-b" d="M 519 220 L 519 302" marker-end="url(#a2)"></path>
+          <path class="d-arr-b" d="M 721 220 L 721 268 L 317 268" ></path>
+          <path class="d-arr-b" d="M 923 220 L 923 302" marker-end="url(#a2)"></path>
+
+          <text class="d-eye" x="24" y="294">WHO READS IT</text>
+
+          <rect class="d-box" x="24" y="304" width="786" height="112"></rect>
+          <text class="d-t" x="40" y="328">Every skill that produces content reads all three before writing a word</text>
+          <text class="d-t-s" x="40" y="352">/caption-writer   /social-creative-designer   /carousel-designer   /reel-scripter</text>
+          <text class="d-t-s" x="40" y="370">/linkedin-writer   /threads-writer   /x-writer   /tiktok-writer   /repurpose</text>
+          <text class="d-t-s" x="40" y="388">/publisher (brand colours)   /community-manager (voice)   /social-performance-review</text>
+          <text class="d-lab" x="40" y="408">This is why nothing ever needs to ask "what does this brand sound like?" twice.</text>
+
+          <rect class="d-box" x="832" y="304" width="182" height="112"></rect>
+          <text class="d-t" x="844" y="328">/social-media-</text>
+          <text class="d-t" x="844" y="343">manager</text>
+          <text class="d-t-s" x="844" y="367">reads it first thing,</text>
+          <text class="d-t-s" x="844" y="384">every session, to</text>
+          <text class="d-t-s" x="844" y="401">pick up where you</text>
+          <text class="d-t-s" x="844" y="418">left off</text>
+        </svg>
+      </div>
+      <figcaption>One author per file, many readers. Onboard a brand once and every specialist that runs afterwards — this month or next year — inherits it automatically.</figcaption>
+    </figure>
+
+    <div class="matrix-scroll">
+      <table class="matrix">
+        <thead>
+          <tr><th>Context file</th><th>Written by</th><th>Read by</th><th>What it carries</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="f">brand-style.md</td>
+            <td class="w">/brand-onboarding</td>
+            <td class="r">every content skill · publisher · community-manager · review</td>
+            <td class="d">Voice, tone, colour palette with hex codes, typography, ICP, content pillars, signature post format, do/don't rules, real example captions.</td>
+          </tr>
+          <tr>
+            <td class="f">content-calendar.md</td>
+            <td class="w">/content-calendar</td>
+            <td class="r">repurpose · all 8 creation skills · review</td>
+            <td class="d">The month's slots. Each one has a specific topic, an angle, a format, an objective and a one-line visual direction — enough for any writer to work from without asking.</td>
+          </tr>
+          <tr>
+            <td class="f">best-performers.md</td>
+            <td class="w">/social-performance-review</td>
+            <td class="r">content-calendar · all writing skills</td>
+            <td class="d">Last month's winners with the numbers. This is the file that makes month three better than month one.</td>
+          </tr>
+          <tr>
+            <td class="f">upcoming-events.md</td>
+            <td class="w" style="color: var(--pink);">you</td>
+            <td class="r">content-calendar</td>
+            <td class="d">Launches, sales, events, seasonal moments. Locked into the calendar first; everything else fills in around them.</td>
+          </tr>
+          <tr>
+            <td class="f">workflow-status.md</td>
+            <td class="w">/social-media-manager</td>
+            <td class="r">/social-media-manager</td>
+            <td class="d">A running checklist of what's done this month. Read at the top of every session so you never restart from scratch.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col">
+      <h3>Two more handoffs worth knowing</h3>
+      <p>Alongside the context files, skills leave <strong>named fields inside their own output</strong> for a specific downstream specialist to pick up.</p>
+      <ul class="tight">
+        <li><strong>Visual Direction</strong> — every caption ends with one line describing the image it needs. The art director reads that line and generates from it, so the words and the picture always tell the same story.</li>
+        <li><strong>Ready to schedule</strong> — every platform post is tagged with the platform, the intended slot, and whether it needs a supporting graphic. The publisher reads those tags and builds the schedule from them.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head col">
+      <span class="eyebrow">The team</span>
+      <h2>Fifteen specialists</h2>
+      <p>Each one is a role with a job, an input and an output. You can run the whole pipeline through the manager, or call any single specialist directly when you just need one thing.</p>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><h3>The manager</h3><span class="when">every session starts here</span></div>
+      <div class="cards">
+        <article class="card">
+          <div class="cmd">/social-media-manager</div>
+          <span class="role">Runs the room</span>
+          <p class="body">Reads the client folder, tells you exactly where things stand — brand set up, calendar built, captions written, visuals done, last month's score — and then routes to whoever is needed next. It never does the work itself. It briefs a specialist, waits for the result, checks the output landed, and <strong>stops for your approval before moving on</strong>.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>the whole client folder</dd></div>
+            <div><dt>Writes</dt><dd class="b">workflow-status.md</dd></div>
+            <div><dt>Best for</dt><dd>"pick up where we left off"</dd></div>
+          </dl>
+        </article>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><h3>Foundation</h3><span class="when">stage 1–2 · sets everything else up</span></div>
+      <div class="cards">
+
+        <article class="card">
+          <div class="cmd">/brand-onboarding</div>
+          <span class="role">Brand strategist · once per client</span>
+          <p class="body">Visits the client's website and Instagram, screenshots both, and pulls out everything provable — their bio, product range, stated values, the words their own customers use in reviews, their dominant colours and typography. Then it sends the client a document that <strong>already has all of that filled in</strong> and only asks what genuinely can't be looked up: exact hex codes, fonts, who their ideal customer is, which products to push, what they'd never post. The answers become the brand guide.</p>
+          <dl class="io">
+            <div><dt>You supply</dt><dd>website · Instagram handle · product photos</dd></div>
+            <div><dt>Writes</dt><dd class="b">brand-style.md · assets/</dd></div>
+            <div><dt>Then</dt><dd>never run again unless the brand changes</dd></div>
+          </dl>
+          <div class="gate-note">You review the finished brand guide before anything is built on top of it. Get this right and every other output improves.</div>
+        </article>
+
+        <article class="card">
+          <div class="cmd">/content-calendar</div>
+          <span class="role">Strategist · start of each month</span>
+          <p class="body">Blocks out the client's real events first — launches, promotions, seasonal moments — then balances the rest of the month. It sets how much of the month goes to each content pillar (and caps promotional content, because that's the mistake most businesses make), then how much goes to each format. Only after the shape is agreed does it fill the slots. <strong>Every slot names a specific topic and angle</strong>, never "educational post".</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>brand-style.md · best-performers.md · upcoming-events.md</dd></div>
+            <div><dt>Writes</dt><dd class="b">content-calendar.md</dd></div>
+            <div><dt>Optional</dt><dd>competitor + trend research</dd></div>
+          </dl>
+          <div class="gate-note">You approve the month's shape before a single caption is written.</div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><h3>Cascade</h3><span class="when">stage 3 · turns one idea into many</span></div>
+      <div class="cards">
+        <article class="card">
+          <div class="cmd">/repurpose</div>
+          <span class="role">Editor</span>
+          <p class="body">Takes one strong source — a calendar slot, a long-form post, a video transcript, a client interview — and works out every format it could become, then briefs the right specialists. One idea becomes a carousel, a reel script, a LinkedIn post and three Threads takes, all carrying the same argument in each platform's own register. <strong>This is where the leverage is</strong>: the thinking happens once, the writing happens five times.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>content-calendar.md · brand-style.md · any source asset</dd></div>
+            <div><dt>Hands to</dt><dd>whichever creation skills the idea suits</dd></div>
+          </dl>
+        </article>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><h3>Words</h3><span class="when">stage 3 · one specialist per platform</span></div>
+      <div class="cards">
+
+        <article class="card">
+          <div class="cmd">/caption-writer</div>
+          <span class="role">Copywriter · Instagram + Facebook</span>
+          <p class="body">Picks a storytelling framework per post — story-and-lesson, problem-agitate-solve, before-and-after, list, contrarian take, question — and says which one it used, so asking for a different angle is one sentence. Enforces the brand's voice from real example captions, bans AI filler phrases outright, and follows each platform's own rules on length, line breaks and hashtags.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>content-calendar.md · brand-style.md · best-performers.md</dd></div>
+            <div><dt>Writes</dt><dd class="b">outputs/captions/ + a Visual Direction per post</dd></div>
+          </dl>
+        </article>
+
+        <article class="card">
+          <div class="cmd">/linkedin-writer</div>
+          <span class="role">LinkedIn specialist</span>
+          <p class="body">Writes for LinkedIn from scratch rather than adapting an Instagram caption — the two platforms reward opposite things. First person, one idea per line, an opinion stated plainly, a takeaway the reader can use, and a question that earns comments.</p>
+          <dl class="io">
+            <div><dt>Writes</dt><dd class="b">outputs/linkedin/</dd></div>
+            <div><dt>Flags</dt><dd>posts that want a stat card or diagram</dd></div>
+          </dl>
+        </article>
+
+        <article class="card">
+          <div class="cmd">/threads-writer</div>
+          <span class="role">Threads specialist</span>
+          <p class="body">Short, direct, opinion-led — Threads rewards takes, not tips. Every post is the hook. <strong>The 500-character limit is enforced with a count shown on each post</strong>, so nothing gets truncated on the way out.</p>
+          <dl class="io">
+            <div><dt>Writes</dt><dd class="b">outputs/threads/</dd></div>
+            <div><dt>Supports</dt><dd>standalone posts and connected threads</dd></div>
+          </dl>
+        </article>
+
+        <article class="card">
+          <div class="cmd">/x-writer</div>
+          <span class="role">X specialist</span>
+          <p class="body">Every post has to work for someone who has never heard of the brand — no warm-ups, no preamble. <strong>280 characters enforced with a count</strong>, thread format when the idea needs room. Can check what's actually being discussed in the client's niche right now and write into it.</p>
+          <dl class="io">
+            <div><dt>Writes</dt><dd class="b">outputs/x/</dd></div>
+            <div><dt>Optional</dt><dd>live X trend research</dd></div>
+          </dl>
+        </article>
+
+        <article class="card">
+          <div class="cmd">/tiktok-writer</div>
+          <span class="role">TikTok specialist</span>
+          <p class="body">Writes the hook, the spoken script and the on-screen text — the caption is the smallest part of a TikTok and is treated that way. Built around the first two seconds, because that's what decides whether the rest gets watched.</p>
+          <dl class="io">
+            <div><dt>Writes</dt><dd class="b">outputs/tiktok/</dd></div>
+            <div><dt>Pairs with</dt><dd>/reel-scripter for the shot list</dd></div>
+          </dl>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><h3>Images and video</h3><span class="when">stage 3 · the visual layer</span></div>
+      <div class="cards">
+
+        <article class="card">
+          <div class="cmd">/social-creative-designer</div>
+          <span class="role">Art director</span>
+          <p class="body">Four ways to make a post image. <strong>Generate</strong> builds a lifestyle scene from a concept. <strong>Composite</strong> takes the client's own product photo and builds a styled world around it. <strong>Brand</strong> adds the client's text treatment to a real photo and changes nothing else. <strong>Stop-motion</strong> renders a short looping Reel. Every prompt specifies subject, composition, action, location, style and the camera and lighting — it's written like a shot brief, because that's what gets a usable image.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>brand-style.md · the Visual Direction line · assets/products/</dd></div>
+            <div><dt>Writes</dt><dd class="b">outputs/creatives/ + the prompts used</dd></div>
+            <div><dt>Rule</dt><dd>real products are never AI-approximated</dd></div>
+          </dl>
+          <div class="gate-note">The product rule is the one that keeps this client-ready: if a post features something the client actually sells, the packaging comes from their own photograph. Never a generated lookalike.</div>
+        </article>
+
+        <article class="card">
+          <div class="cmd">/carousel-designer</div>
+          <span class="role">Carousel designer</span>
+          <p class="body">Builds the format that gets saved. Plans the panel arc first — hook, promise, the body beats, the proof, the call to action — then <strong>locks one design system across every panel</strong> so eight slides read as a single designed object rather than eight separate images. Sized and safe-zoned for feed, with a matching caption whose opening line makes the same promise as panel one.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>the calendar slot · brand-style.md</dd></div>
+            <div><dt>Writes</dt><dd class="b">outputs/carousels/ + a caption stub</dd></div>
+          </dl>
+        </article>
+
+        <article class="card">
+          <div class="cmd">/reel-scripter</div>
+          <span class="role">Short-form video</span>
+          <p class="body">The words and the plan, for video the client films themselves. Hook in the first line, a script that fits the runtime, the on-screen text frame by frame, a shot list, and a suggested cut. Most SMBs don't need generated footage — they need to be told exactly what to point the phone at and what to say.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>the calendar slot · brand-style.md</dd></div>
+            <div><dt>Writes</dt><dd class="b">outputs/reels/</dd></div>
+          </dl>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><h3>Ship and learn</h3><span class="when">stage 4 · closes the loop</span></div>
+      <div class="cards">
+
+        <article class="card">
+          <div class="cmd">/publisher</div>
+          <span class="role">Scheduler</span>
+          <p class="body">Collects everything approved for the month, generates supporting graphics for the posts that asked for one — stat cards, framework diagrams, quote cards — then lays out <strong>the entire proposed schedule for your approval before a single post is submitted</strong>. Every post shown with its platform, its time, its account and its image.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>everything in outputs/ · brand-style.md for colours</dd></div>
+            <div><dt>Writes</dt><dd class="b">the live schedule + workflow-status.md</dd></div>
+          </dl>
+          <div class="gate-note">Nothing is ever submitted without the full schedule being shown first. Wrong time, wrong account or wrong platform is expensive to undo once it's live.</div>
+        </article>
+
+        <article class="card">
+          <div class="cmd">/community-manager</div>
+          <span class="role">Community · ongoing</span>
+          <p class="body">The other half of social media. Reads comments, DMs and enquiries, and drafts replies in the brand's voice — sorted into <strong>routine, needs-your-input, and escalate</strong>, so you're only reading the ones that actually need you. Nothing sends without approval.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>brand-style.md · inbound messages</dd></div>
+            <div><dt>Produces</dt><dd>drafted replies, triaged</dd></div>
+          </dl>
+        </article>
+
+        <article class="card">
+          <div class="cmd">/social-performance-review</div>
+          <span class="role">Analyst · end of month</span>
+          <p class="body">Pulls the month's numbers, compares what was planned against what was posted, and finds the patterns that matter — which pillars earned saves, which formats earned reach, which posts underperformed and why. Every number comes with a "so what does this change next month". <strong>The recommendations are written straight back into the client folder</strong>, so the next calendar is built from evidence rather than guesswork.</p>
+          <dl class="io">
+            <div><dt>Reads</dt><dd>the month's results · content-calendar.md · last review</dd></div>
+            <div><dt>Writes</dt><dd class="b">outputs/reviews/ · best-performers.md</dd></div>
+            <div><dt>Feeds</dt><dd>next month's /content-calendar</dd></div>
+          </dl>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head col">
+      <span class="eyebrow">In practice</span>
+      <h2>What a month actually looks like</h2>
+      <p>For a client already onboarded. Onboarding happens once, up front, and takes an hour.</p>
+    </div>
+
+    <div class="month">
+      <div class="wk">
+        <div class="when">Day 1</div>
+        <div class="what">Open the client's folder, type <span class="mono">/social-media-manager</span>. It reads the folder and tells you last month scored well on educational carousels and poorly on straight product posts. <strong>Run <span class="mono">/content-calendar</span></strong> — it weights this month accordingly, blocks out the two promotions you added to <span class="mono">upcoming-events.md</span>, and briefs sixteen slots. You read the summary table and move two posts. <strong>Approved.</strong></div>
+      </div>
+      <div class="wk">
+        <div class="when">Day 1–2</div>
+        <div class="what">Content production. <strong><span class="mono">/repurpose</span></strong> takes the month's three strongest angles and fans each one out. Then the specialists run: captions for Instagram and Facebook, native posts for LinkedIn, Threads and X, two carousels, four reel scripts. Everything lands in <span class="mono">outputs/</span> as markdown you can read, edit or paste anywhere. <strong>You review each batch before the next starts.</strong></div>
+      </div>
+      <div class="wk">
+        <div class="when">Day 2–3</div>
+        <div class="what">Visuals. <strong><span class="mono">/social-creative-designer</span></strong> works one post at a time, reading the Visual Direction the copywriter left. Product posts use the client's real product photograph inside a generated scene. <strong><span class="mono">/carousel-designer</span></strong> builds the two carousels as locked panel sets. You approve each image as it comes.</div>
+      </div>
+      <div class="wk">
+        <div class="when">Day 3</div>
+        <div class="what"><strong><span class="mono">/publisher</span></strong> lays out the full month — every post, its platform, its date and time, its image. You scan it once, adjust two times, confirm. The month goes live on schedule. <strong>That's the month's production done in three days.</strong></div>
+      </div>
+      <div class="wk">
+        <div class="when">Throughout</div>
+        <div class="what"><strong><span class="mono">/community-manager</span></strong> drafts replies to comments and DMs in the brand's voice, sorted so you only handle the ones that need a human. Ten minutes a day instead of an hour.</div>
+      </div>
+      <div class="wk">
+        <div class="when">End of month</div>
+        <div class="what"><strong><span class="mono">/social-performance-review</span></strong> pulls the numbers and produces a client-ready report — what worked, what didn't, and what to change. It writes the findings back into the folder, and next month's calendar starts from them. <strong>The loop closes, and month three is better than month one.</strong></div>
+      </div>
+    </div>
+
+    <div class="note human">
+      <h4>You are in the loop at every gate</h4>
+      <p>This is deliberate, not a limitation. The system produces the work; a person decides whether it ships. Five sign-off points — the brand guide, the calendar, each content batch, each visual, and the full schedule — and nothing passes one without you.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head col">
+      <span class="eyebrow">Under the hood</span>
+      <h2>What it's built on</h2>
+    </div>
+
+    <div class="col">
+      <p>The team runs inside Claude Code. The skills themselves are plain markdown — readable, editable, and yours to adapt per client or per agency. Connected tools give the specialists hands.</p>
+    </div>
+
+    <div class="tools">
+      <div class="tool">
+        <div class="n">Browser control</div>
+        <span class="u">Brand onboarding</span>
+        <p>Visits the client's site and socials, screenshots them, and reads the real copy — so onboarding starts from evidence, not a blank questionnaire.</p>
+      </div>
+      <div class="tool">
+        <div class="n">Image generation</div>
+        <span class="u">Creatives + carousels</span>
+        <p>Produces the branded visuals, product composites, carousel panels and stop-motion frames from the art director's shot briefs.</p>
+      </div>
+      <div class="tool">
+        <div class="n">Scheduling</div>
+        <span class="u">Publishing</span>
+        <p>Pushes the approved month to every connected platform, generates supporting graphics, and manages the live schedule.</p>
+      </div>
+      <div class="tool">
+        <div class="n">Research</div>
+        <span class="u">Calendar + writing</span>
+        <p>Checks what competitors are posting and what's trending in the client's niche, so the calendar reflects the market and not just the brand.</p>
+      </div>
+    </div>
+
+    <div class="col" style="margin-top: 2.4rem;">
+      <h3>Getting started with a client</h3>
+      <ul class="tight">
+        <li><strong>Make a folder</strong> for the client and open it in Claude Code.</li>
+        <li><strong>Type <code>/social-media-manager</code>.</strong> It sees a new client and starts onboarding.</li>
+        <li><strong>Answer the brand questions once.</strong> Everything after that inherits the answers.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    Social AI Team — a complete social media team as Claude Code skills<br>
+    Built by the AI Impact · <a href="https://theaiimpact.co/">theaiimpact.co</a>
+  </footer>
+
+</div>
