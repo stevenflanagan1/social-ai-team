@@ -99,7 +99,7 @@ Writes LinkedIn-native posts — not adapted captions. First-person, professiona
 Writes Threads posts: short, direct, opinion-led, made for conversation. Strictly enforces the 500 character limit with a count on every post. Supports standalone posts and connected threads. Takes outperform tips on Threads — this skill writes for how the platform actually works.
 
 ### `/x-writer` — X/Twitter Content Specialist
-Writes X-native posts and threads. Strictly enforces the 280 character limit with a count on every post. Every post works without context — no warm-ups, no preamble. X thread format (1/, 2/...). Optional X trend research via Tasty Content MCP.
+Writes X-native posts and threads. Strictly enforces the 280 character limit with a count on every post. Every post works without context — no warm-ups, no preamble. X thread format (1/, 2/...). Optional X trend research via X API.
 
 ### `/publisher` — Social Media Publisher
 Takes approved content from any content skill and schedules it via Blotato MCP. Checks the Blotato connection first — shows a clear setup message if not connected. Generates infographic visuals (stat cards, framework diagrams, 3-step process graphics, quote graphics) for posts flagged by platform specialists. Full schedule confirmation before submitting anything. Blotato is optional — all other skills work without it.
