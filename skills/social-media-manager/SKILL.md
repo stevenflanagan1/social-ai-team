@@ -1,7 +1,7 @@
 ---
 name: social-media-manager
 version: 2.0.0
-description: Social Media Manager role skill. Orchestrates the full SMB social media workflow across three layers — Foundation (brand setup + calendar), Content Creation (captions, platform-specialist posts, visuals), and Distribution (scheduling via Blotato + performance review). Coordinates all 9 component skills as a sequential, human-reviewed pipeline. Run this skill instead of invoking component skills individually.
+description: Orchestrates the full SMB social media workflow across Foundation, Content Creation, and Distribution. Coordinates every component skill as a sequential, human-reviewed pipeline. Run this skill instead of invoking components individually.
 ---
 
 # Social Media Manager
@@ -27,6 +27,7 @@ LAYER 2 — CONTENT CREATION  (run monthly, after calendar)
   /x-writer                 →  outputs/x/           (X/Twitter posts)
 
 LAYER 3 — DISTRIBUTION & REVIEW
+  /xquik                    →  Xquik (approved X research, drafts, immediate publishing) [optional]
   /publisher                →  Blotato (scheduling + infographic visuals)  [optional]
   /social-performance-review →  outputs/reviews/   (run end of month)
                                       ↓
@@ -153,9 +154,14 @@ Steps:
    - `/threads-writer` → `outputs/threads/`
    - `/x-writer` → `outputs/x/`
 4. Pause after each skill completes — present the output summary. Ask: "Any posts you want adjusted before we move to publishing?"
-5. On approval, ask: "Do you want to schedule these via Blotato, or handle publishing manually?"
-6. If **Blotato**: run `/publisher` — it handles the setup check, infographic generation, and scheduling
-7. If **manually**: produce the Monthly Handoff Summary (Phase 5) with publishing notes
+5. On approval, split the publishing decision by platform:
+   - If X content is included, present 3 choices.
+   - Ask: "Use Xquik, scheduled Blotato publishing, or manual publishing?"
+   - If LinkedIn or Threads content is included, ask: "For LinkedIn and Threads, do you want to schedule through Blotato or handle publishing manually?"
+6. If **Xquik** is selected for X, run `/xquik` for `outputs/x/` only. It handles setup, research, saved drafts, and approval-gated immediate publishing.
+7. Run `/publisher` only for approved platforms that selected **Blotato**.
+8. Add manual platforms to the Monthly Handoff Summary (Phase 5) with publishing notes.
+9. Never send a manual platform to `/publisher` after Xquik.
 
 ---
 
@@ -174,6 +180,7 @@ When invoking a component skill, follow this pattern:
    - `/linkedin-writer` → `~/.claude/skills/linkedin-writer/SKILL.md`
    - `/threads-writer` → `~/.claude/skills/threads-writer/SKILL.md`
    - `/x-writer` → `~/.claude/skills/x-writer/SKILL.md`
+   - `/xquik` → `~/.claude/skills/xquik/SKILL.md`
    - `/publisher` → `~/.claude/skills/publisher/SKILL.md`
    - `/social-performance-review` → `~/.claude/skills/social-performance-review/SKILL.md`
 
@@ -197,7 +204,8 @@ At each handoff, verify the output file from the completed skill before proceedi
 | `/social-creative-designer` | `outputs/creatives/` contains the expected image files | Monthly handoff |
 | `/linkedin-writer` | `outputs/linkedin/` file exists with all posts and BLOTATO FLAG fields | `/publisher` |
 | `/threads-writer` | `outputs/threads/` file exists with all posts and BLOTATO FLAG fields | `/publisher` |
-| `/x-writer` | `outputs/x/` file exists with all posts and BLOTATO FLAG fields | `/publisher` |
+| `/x-writer` | `outputs/x/` file exists with all posts and BLOTATO FLAG fields | `/publisher`, `/xquik` |
+| `/xquik` | Xquik action result or research summary confirmed | `context/workflow-status.md` Xquik activity fields |
 | `/publisher` | Scheduling confirmed in Blotato, summary shown | `context/workflow-status.md` publishing fields |
 | `/social-performance-review` | `outputs/reviews/` file exists, `context/best-performers.md` updated | Next `/content-calendar` |
 
@@ -236,6 +244,16 @@ CONTENT PRODUCED
   Visuals created:    [n]
   Visuals to source:  [n] (client photos needed)
 
+XQUIK STATUS
+  Posts researched:        [n] / not used
+  Drafts saved:            [n] / not used
+  Posts published:         [n with confirmed tweet IDs] / not used
+  Confirmed tweet IDs:     [IDs] / none
+  Publication records:     [source identifier → content fingerprint → tweet ID] / none
+  Thread status:           [outputs/x/file#THREAD n → partial/complete → tweet IDs] / none
+  Pending writes:          [source identifier → action ID → validated status URL] / none
+  In-flight writes:        [source identifier → stored idempotency mapping → state] / none
+
 PUBLISHING STATUS
   Scheduled via Blotato:  [n posts] / not yet scheduled
   Scheduled platforms:    [list] / —
@@ -251,7 +269,7 @@ FILES
 
 NEXT ACTIONS FOR CLIENT
   □ Review and approve all captions and platform posts
-  □ [If not scheduled] Publish posts via Blotato, Later, Buffer, or native platform
+  □ Publish remaining platforms: [not scheduled or confirmed through Xquik]
   □ Source photos for [n] posts that need client images
   □ At end of month: share analytics for performance review
 
@@ -259,6 +277,9 @@ NEXT ACTIONS FOR OPERATOR
   □ End-of-month: run /social-performance-review
   □ Start of next month: run /social-media-manager to build next calendar
 ```
+
+Count Xquik posts as published only when confirmed tweet IDs exist.
+Exclude confirmed Xquik posts from every remaining publishing action.
 
 ---
 
@@ -281,6 +302,13 @@ Last updated: [date]
 - [ ] Threads posts — [n] written / not started
 - [ ] X posts — [n] written / not started
 - [ ] Visuals — [n of n] complete
+- [ ] Xquik research: [n posts researched / not used]
+- [ ] Xquik drafts: [n drafts saved / not used]
+- [ ] Published via Xquik: [n confirmed posts / not started] (Tweet IDs: [IDs / none])
+- [ ] Xquik publication records: [source identifier → content fingerprint → tweet ID / none]
+- [ ] Xquik thread status: [outputs/x/file#THREAD n → partial/complete → tweet IDs / none]
+- [ ] Pending Xquik writes: [source identifier → action ID → validated status URL / none]
+- [ ] In-flight Xquik writes: [source identifier → idempotency key → payload fingerprint → state / none]
 - [ ] Published via Blotato — [n posts scheduled / not started]
 - [ ] Performance review
 
@@ -289,7 +317,7 @@ Last updated: [date]
 - [Month]: Review complete — Score [x/10]
 ```
 
-If an existing `workflow-status.md` file does not have the LinkedIn, Threads, X, or publishing fields, add them and set their status to "not started". Do not overwrite existing entries.
+If an existing `workflow-status.md` file does not have the LinkedIn, Threads, X, Xquik, or publishing fields, add them and set their status to "not started". Do not overwrite existing entries.
 
 This file is the first thing read in Phase 0 — it makes resuming mid-workflow reliable.
 
@@ -303,6 +331,7 @@ This file is the first thing read in Phase 0 — it makes resuming mid-workflow 
 - **Mid-workflow recovery** — if a session ends mid-workflow, `context/workflow-status.md` tells you exactly where to resume. Never restart from scratch.
 - **Route E (specific tasks) is the most common daily use** — most sessions won't be full-pipeline runs. The operator will ask for one caption, one image, or a calendar tweak. Use the right component skill directly.
 - **Use Route F for LinkedIn, Threads, and X content — not Route B.** `/caption-writer` is designed for Instagram and Facebook. The platform specialists (`/linkedin-writer`, `/threads-writer`, `/x-writer`) write from first principles for each platform and produce significantly better output. Don't use caption-writer for LinkedIn or X content.
+- **Use `/xquik` after `/x-writer`, not instead of it.** Xquik handles research, drafts, and approval-gated immediate publishing. `/x-writer` remains the copywriting source.
 - **/publisher requires Blotato.** If the client handles their own scheduling via Later, Buffer, or the native platform, skip `/publisher` entirely and use the Monthly Handoff Summary to hand over the output files. `/publisher` is an optional layer — the rest of the workflow runs without it.
 
 ---
@@ -324,6 +353,7 @@ This file is the first thing read in Phase 0 — it makes resuming mid-workflow 
     │   └── /x-writer                  (X/Twitter posts)
     │
     └── LAYER 3 — DISTRIBUTION & REVIEW
+        ├── /xquik                     (X research, drafts, and immediate publishing)
         ├── /publisher                 (Blotato scheduling + infographics)
         └── /social-performance-review (run end of month)
 

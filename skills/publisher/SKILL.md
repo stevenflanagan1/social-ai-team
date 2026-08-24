@@ -92,7 +92,20 @@ Do not ask any further questions. Do not attempt to schedule anything. The sessi
 
 After setup check passes:
 
-1. Read `context/workflow-status.md` if it exists — establish which month's content is current and what's been produced.
+1. Read `context/workflow-status.md` if it exists. Establish the current month.
+   Build an exclusion set from Xquik publication, pending, and in-flight records.
+
+   - Match X entries by exact source path and `POST [n]` or `THREAD [n]`.
+   - Match thread progress through `THREAD [n] ITEM [i]/[total]` records.
+   - Exclude entries with confirmed Xquik tweet IDs.
+   - Exclude an entire thread when any item has Xquik progress.
+   - Exclude entries with a pending Xquik write.
+   - Exclude entries with a prepared or sent Xquik idempotency mapping.
+   - Resume those entries through `/xquik`, never through Blotato.
+   - Never infer exclusions from aggregate counts or tweet IDs alone.
+   - If Xquik records lack source mappings, pause X scheduling.
+   - Ask the operator to map each write before continuing with X.
+   - Update `context/workflow-status.md` with the confirmed mappings.
 
 2. Ask what to schedule:
 
@@ -111,13 +124,17 @@ After setup check passes:
 - `outputs/x/[client-name]-x-[month]-[year].md`
 - `outputs/captions/[client-name]-captions-[month]-[year].md`
 
-Read each file that exists for the selected month and platform(s). Build a complete list of posts to process. Show a summary before proceeding:
+Read each file that exists for the selected month and platform(s).
+Remove every X entry in the Xquik exclusion set.
+Build a complete list of eligible posts.
+Show excluded X entries separately before proceeding:
 
 > "Found [n] posts across [platforms]:
 > - LinkedIn: [n] posts
 > - Threads: [n] posts
 > - X: [n] posts
 > - Instagram/other: [n] posts
+> - X excluded: [n] confirmed, [n] pending, [n] in-flight via Xquik
 >
 > Proceeding to visual check."
 
@@ -269,6 +286,7 @@ After the summary, offer these management options:
 - **Phase 0 is a hard stop by design.** Calling scheduling tools on a disconnected Blotato account produces confusing errors with no actionable resolution. The hard stop gives a clear message and setup path instead. Do not attempt to work around it.
 - **Blotato visuals and Nano Banana visuals serve different purposes.** Blotato infographics are for text-forward, structured content — stats, frameworks, process diagrams. Nano Banana is for brand photography, product composites, and stop-motion. If the post needs a creative image, it should have been handled in `/social-creative-designer`. If it needs an infographic, it's handled here.
 - **The BLOTATO FLAG field is the handoff convention.** All three platform specialists (`/linkedin-writer`, `/threads-writer`, `/x-writer`) and `/caption-writer` write this field at the end of every post. The publisher reads it to know which posts need visual generation and what type. The format is: `BLOTATO FLAG: Yes — stat card` or `BLOTATO FLAG: No`.
+- **Xquik exclusions are mandatory.** Never schedule a confirmed, pending, or in-flight Xquik item through Blotato. Match each item using its source path and `POST [n]` or `THREAD [n]` identifier. Stop X scheduling when old status data lacks that mapping.
 - **The approval gate in Phase 3 is non-optional.** Wrong platform, wrong time, wrong account — scheduling mistakes are hard to fix once they go out. The confirmation step exists specifically to catch these before submission.
 - **Visual generation can fail.** If `blotato_get_visual_status` returns `failed`, note it and proceed without a visual rather than blocking the whole session. Flag failed visuals clearly in the summary.
 - **`blotato_list_visual_templates` must succeed before generating visuals.** If it returns no templates, skip visual generation for the entire session and note it in the summary. Do not attempt to call `blotato_create_visual` without a valid template ID.
