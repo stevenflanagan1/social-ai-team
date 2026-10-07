@@ -4,19 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Sydney Weekend</title>
-<meta name="description" content="Plan a Saturday in Sydney. Pick what you're into, your budget and the vibe, and get a morning-to-evening itinerary. Demo content.">
+<meta name="description" content="Plan a Saturday in Sydney in one tap. Pick what you're into, your budget and the vibe, and get a morning-to-evening itinerary.">
 <meta name="theme-color" content="#0E2233">
 <meta property="og:title" content="Sydney Weekend">
-<meta property="og:description" content="Build a Saturday in Sydney in one tap.">
+<meta property="og:description" content="Your Saturday in Sydney, sorted in one tap.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230E2233'/%3E%3Cpath d='M10 46 Q32 10 54 46' fill='none' stroke='%23F2785C' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M8 50h48' stroke='%237FD1D8' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@1,9..144,600&display=swap">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <!--SW:BODY-START-->
-<header class="hero">
+<header class="hero" id="top">
   <div class="hero-sky" aria-hidden="true"></div>
   <svg class="hero-skyline" viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
     <path class="sk-far" d="M0 170 L70 170 L70 140 L95 140 L95 120 L120 120 L120 160 L160 160 L160 104 L182 104 L182 92 L200 92 L200 150 L240 150 L240 128 L268 128 L268 170 L1200 170 L1200 220 L0 220 Z"/>
@@ -31,11 +31,30 @@
     <rect class="sk-base" x="286" y="172" width="196" height="10" rx="2"/>
     <path class="sk-water" d="M0 182 L1200 182 L1200 220 L0 220 Z"/>
   </svg>
+
+  <nav class="nav wrap" aria-label="Main">
+    <a class="brand" href="#top" aria-label="Sydney Weekend home">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#0E2233"/><path d="M10 46 Q32 10 54 46" fill="none" stroke="#F2785C" stroke-width="5" stroke-linecap="round"/><path d="M8 50h48" stroke="#7FD1D8" stroke-width="4" stroke-linecap="round"/></svg>
+      <span class="brand-word">Sydney Weekend</span>
+    </a>
+    <div class="nav-links">
+      <a href="#planner">Plan</a>
+      <a href="#how">How it works</a>
+      <a href="#hoods">Neighbourhoods</a>
+      <a href="#venues">For venues</a>
+    </div>
+    <button type="button" class="nav-cta" data-action="app">Get the app</button>
+  </nav>
+
   <div class="wrap hero-inner">
-    <p class="eyebrow">Saturday planner · Sydney, NSW</p>
+    <p class="eyebrow">Your Saturday, sorted</p>
     <h1 class="hero-title">Sydney<br>Weekend</h1>
     <p class="hero-sub">Tell us what you're into. We'll line up a morning, lunch, afternoon and evening across the harbour city.</p>
-    <p class="demo-pill"><span class="dot" aria-hidden="true"></span>Demo: sample content, not live recommendations</p>
+    <ul class="hero-stats" aria-label="At a glance">
+      <li><b class="mono" id="stat-spots">60+</b><span>hand-picked spots</span></li>
+      <li><b class="mono" id="stat-hoods">30+</b><span>neighbourhoods</span></li>
+      <li><b class="mono">1</b><span>tap to plan</span></li>
+    </ul>
   </div>
 </header>
 
@@ -84,21 +103,28 @@
     </div>
 
     <button type="submit" class="btn-build" id="build-btn">
-      <span>Build My Saturday</span>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="btn-label">Build My Saturday</span>
+      <svg class="btn-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="spinner" aria-hidden="true"></span>
     </button>
   </form>
 
   <section class="plan" id="plan" aria-live="polite" aria-labelledby="plan-title">
     <div class="plan-head">
       <div class="plan-head-text">
-        <p class="eyebrow eyebrow-ink" id="plan-kicker">Sample plan</p>
+        <p class="eyebrow eyebrow-ink" id="plan-kicker">Popular this weekend</p>
         <h2 class="plan-title" id="plan-title">Your Saturday</h2>
         <p class="plan-tags" id="plan-tags"></p>
       </div>
-      <div class="plan-total">
-        <span class="plan-total-label">Est. total per person</span>
-        <span class="plan-total-value mono" id="plan-total">$0</span>
+      <div class="plan-side">
+        <div class="plan-total">
+          <span class="plan-total-label">Est. total per person</span>
+          <span class="plan-total-value mono" id="plan-total">$0</span>
+        </div>
+        <button type="button" class="btn-ghost" data-action="copy">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <span>Copy plan</span>
+        </button>
       </div>
     </div>
 
@@ -109,14 +135,109 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>Try another plan</span>
       </button>
-      <p class="plan-note">Costs are rough estimates in AUD per person. Opening hours, prices and bookings change, so check each venue before you go.</p>
+      <p class="plan-note">Prices are estimates per person and can change. Check opening hours before you head out.</p>
+    </div>
+  </section>
+
+  <section class="how" id="how" aria-labelledby="how-title">
+    <p class="eyebrow eyebrow-ink">How it works</p>
+    <h2 class="section-title" id="how-title">From couch to Saturday in under a minute</h2>
+    <ol class="steps">
+      <li class="step">
+        <span class="step-n mono">1</span>
+        <h3>Pick your mood</h3>
+        <p>Food, outdoors, drinks or culture. Set a budget and tell us who's coming.</p>
+      </li>
+      <li class="step">
+        <span class="step-n mono">2</span>
+        <h3>Get a full day</h3>
+        <p>Four stops that flow from morning coffee to a late one, timed so you're never rushing.</p>
+      </li>
+      <li class="step">
+        <span class="step-n mono">3</span>
+        <h3>Swap, save, book</h3>
+        <p>Swap any stop you don't love, save the ones you do, and reserve a table in a couple of taps.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="hoods" id="hoods" aria-labelledby="hoods-title">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow eyebrow-ink">Neighbourhoods</p>
+        <h2 class="section-title" id="hoods-title">Start from a suburb</h2>
+      </div>
+      <p class="section-sub">Tap one and we'll build a Saturday in its spirit.</p>
+    </div>
+    <div class="hood-grid" id="hood-grid"></div>
+  </section>
+
+  <section class="band band-venues" id="venues" aria-labelledby="venues-title">
+    <div class="band-text">
+      <p class="eyebrow">For venues</p>
+      <h2 class="section-title" id="venues-title">Own a café, bar or gallery in Sydney?</h2>
+      <p>Get in front of people planning their weekend, right when they're deciding where to go. Listing is free for independent venues.</p>
+    </div>
+    <button type="button" class="btn-light" data-action="partner">List your venue</button>
+  </section>
+
+  <section class="band band-app" id="app" aria-labelledby="app-title">
+    <div class="band-text">
+      <p class="eyebrow">The app</p>
+      <h2 class="section-title" id="app-title">Take your Saturday with you</h2>
+      <p>Saved plans, live booking updates and a nudge when it's time to head to your next stop.</p>
+      <div class="store-row">
+        <button type="button" class="store-btn" data-action="app">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span><small>Download for</small>iPhone</span>
+        </button>
+        <button type="button" class="store-btn" data-action="app">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="18" r="1.3" fill="currentColor"/></svg>
+          <span><small>Download for</small>Android</span>
+        </button>
+      </div>
+    </div>
+    <div class="phone" aria-hidden="true">
+      <div class="phone-screen" id="phone-screen"></div>
     </div>
   </section>
 </main>
 
-<footer class="foot wrap">
-  <p><strong>Sydney Weekend</strong> is a demo. Places are real, but descriptions, prices and tips are illustrative examples rather than live data or endorsements.</p>
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <div class="foot-brand">
+      <a class="brand brand-ink" href="#top">
+        <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#0E2233"/><path d="M10 46 Q32 10 54 46" fill="none" stroke="#F2785C" stroke-width="5" stroke-linecap="round"/><path d="M8 50h48" stroke="#7FD1D8" stroke-width="4" stroke-linecap="round"/></svg>
+        <span class="brand-word">Sydney Weekend</span>
+      </a>
+      <p class="ack">Sydney Weekend acknowledges the Gadigal people of the Eora Nation, the Traditional Custodians of the land on which we work and play, and pays respect to Elders past and present.</p>
+    </div>
+    <nav class="foot-links" aria-label="Footer">
+      <div>
+        <h3>Explore</h3>
+        <a href="#planner">Plan a Saturday</a>
+        <a href="#hoods">Neighbourhoods</a>
+        <a href="#how">How it works</a>
+      </div>
+      <div>
+        <h3>Company</h3>
+        <a href="#venues">For venues</a>
+        <a href="#app">Get the app</a>
+        <a href="#top">Back to top</a>
+      </div>
+    </nav>
+  </div>
+  <div class="wrap foot-base">
+    <span>© 2026 Sydney Weekend</span>
+    <span>Made on Gadigal Country</span>
+  </div>
 </footer>
+
+<dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
+  <div class="sheet-inner" id="sheet-inner"></div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <!--SW:BODY-END-->
 <script src="data.js"></script>
 <script src="app.js"></script>
