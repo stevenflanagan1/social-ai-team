@@ -1,0 +1,9 @@
+{
+  "name": "sydney-weekend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plan a Saturday in Sydney. Static demo web app.",
+  "scripts": {
+    "start": "npx --yes serve ."
+  }
+}

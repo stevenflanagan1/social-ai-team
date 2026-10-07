@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sydney Weekend</title>
+<meta name="description" content="Plan a Saturday in Sydney. Pick what you're into, your budget and the vibe, and get a morning-to-evening itinerary. Demo content.">
+<meta name="theme-color" content="#0E2233">
+<meta property="og:title" content="Sydney Weekend">
+<meta property="og:description" content="Build a Saturday in Sydney in one tap.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230E2233'/%3E%3Cpath d='M10 46 Q32 10 54 46' fill='none' stroke='%23F2785C' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M8 50h48' stroke='%237FD1D8' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!--SW:BODY-START-->
+<header class="hero">
+  <div class="hero-sky" aria-hidden="true"></div>
+  <svg class="hero-skyline" viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <path class="sk-far" d="M0 170 L70 170 L70 140 L95 140 L95 120 L120 120 L120 160 L160 160 L160 104 L182 104 L182 92 L200 92 L200 150 L240 150 L240 128 L268 128 L268 170 L1200 170 L1200 220 L0 220 Z"/>
+    <path class="sk-bridge" d="M560 172 Q790 30 1020 172" fill="none" stroke-width="10"/>
+    <path class="sk-bridge" d="M560 172 Q790 62 1020 172" fill="none" stroke-width="5"/>
+    <path class="sk-deck" d="M500 150 L1090 150" stroke-width="7"/>
+    <rect class="sk-pylon" x="530" y="110" width="34" height="62" rx="3"/>
+    <rect class="sk-pylon" x="1016" y="110" width="34" height="62" rx="3"/>
+    <path class="sk-sail" d="M300 176 C312 128 340 104 378 98 C364 124 356 152 356 176 Z"/>
+    <path class="sk-sail" d="M346 176 C358 120 392 92 438 86 C420 118 410 150 410 176 Z"/>
+    <path class="sk-sail" d="M398 176 C412 132 440 112 474 108 C462 132 456 154 456 176 Z"/>
+    <rect class="sk-base" x="286" y="172" width="196" height="10" rx="2"/>
+    <path class="sk-water" d="M0 182 L1200 182 L1200 220 L0 220 Z"/>
+  </svg>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">Saturday planner · Sydney, NSW</p>
+    <h1 class="hero-title">Sydney<br>Weekend</h1>
+    <p class="hero-sub">Tell us what you're into. We'll line up a morning, lunch, afternoon and evening across the harbour city.</p>
+    <p class="demo-pill"><span class="dot" aria-hidden="true"></span>Demo: sample content, not live recommendations</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <form class="planner" id="planner" aria-labelledby="planner-title">
+    <h2 class="planner-title" id="planner-title">Shape your Saturday</h2>
+
+    <fieldset class="group">
+      <legend>What do you want to do?</legend>
+      <div class="chips chips-4">
+        <input type="radio" name="interest" id="int-food" value="food" checked>
+        <label for="int-food"><span class="chip-k">Food</span><span class="chip-d">Markets, yum cha, long lunches</span></label>
+        <input type="radio" name="interest" id="int-outdoors" value="outdoors">
+        <label for="int-outdoors"><span class="chip-k">Outdoors</span><span class="chip-d">Coast walks, ferries, beaches</span></label>
+        <input type="radio" name="interest" id="int-drinks" value="drinks">
+        <label for="int-drinks"><span class="chip-k">Drinks</span><span class="chip-d">Pubs, breweries, cocktail bars</span></label>
+        <input type="radio" name="interest" id="int-culture" value="culture">
+        <label for="int-culture"><span class="chip-k">Culture</span><span class="chip-d">Galleries, history, theatre</span></label>
+      </div>
+    </fieldset>
+
+    <div class="group-row">
+      <fieldset class="group">
+        <legend>Budget</legend>
+        <div class="chips chips-3">
+          <input type="radio" name="budget" id="bud-1" value="1">
+          <label for="bud-1"><span class="chip-k mono">$</span><span class="chip-d">Up to ~$100 pp</span></label>
+          <input type="radio" name="budget" id="bud-2" value="2" checked>
+          <label for="bud-2"><span class="chip-k mono">$$</span><span class="chip-d">Up to ~$300 pp</span></label>
+          <input type="radio" name="budget" id="bud-3" value="3">
+          <label for="bud-3"><span class="chip-k mono">$$$</span><span class="chip-d">Go all out</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>Vibe</legend>
+        <div class="chips chips-3">
+          <input type="radio" name="vibe" id="vibe-chill" value="chill">
+          <label for="vibe-chill"><span class="chip-k">Chill</span><span class="chip-d">Slow and easy</span></label>
+          <input type="radio" name="vibe" id="vibe-date" value="date" checked>
+          <label for="vibe-date"><span class="chip-k">Date Night</span><span class="chip-d">Just the two of you</span></label>
+          <input type="radio" name="vibe" id="vibe-friends" value="friends">
+          <label for="vibe-friends"><span class="chip-k">With Friends</span><span class="chip-d">Bring the crew</span></label>
+        </div>
+      </fieldset>
+    </div>
+
+    <button type="submit" class="btn-build" id="build-btn">
+      <span>Build My Saturday</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </form>
+
+  <section class="plan" id="plan" aria-live="polite" aria-labelledby="plan-title">
+    <div class="plan-head">
+      <div class="plan-head-text">
+        <p class="eyebrow eyebrow-ink" id="plan-kicker">Sample plan</p>
+        <h2 class="plan-title" id="plan-title">Your Saturday</h2>
+        <p class="plan-tags" id="plan-tags"></p>
+      </div>
+      <div class="plan-total">
+        <span class="plan-total-label">Est. total per person</span>
+        <span class="plan-total-value mono" id="plan-total">$0</span>
+      </div>
+    </div>
+
+    <ol class="timeline" id="timeline"></ol>
+
+    <div class="plan-actions">
+      <button type="button" class="btn-again" id="again-btn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Try another plan</span>
+      </button>
+      <p class="plan-note">Costs are rough estimates in AUD per person. Opening hours, prices and bookings change, so check each venue before you go.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot wrap">
+  <p><strong>Sydney Weekend</strong> is a demo. Places are real, but descriptions, prices and tips are illustrative examples rather than live data or endorsements.</p>
+</footer>
+<!--SW:BODY-END-->
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
